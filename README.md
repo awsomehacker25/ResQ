@@ -10,12 +10,13 @@ scan/notify/masked-call machinery. No UI.
 
 ```bash
 npm install
-cp .env.example .env.local        # fill in Supabase; Twilio is optional
+cp .env.example .env.local        # see SETUP.md for where each value comes from
 supabase db reset                 # applies migrations + seeds two demo profiles
 npm run dev
 ```
 
-Twilio vars left unset means alerts are logged and skipped — never fatal.
+Only the three Supabase vars are required; Twilio is optional and its absence is
+never fatal. Full walkthrough in [SETUP.md](SETUP.md).
 
 ## API
 
