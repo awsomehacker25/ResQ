@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { browserClient } from "@/lib/supabase-browser";
@@ -9,6 +9,14 @@ import { ShieldIcon } from "@/components/icons";
 type State = "checking" | "verified" | "error";
 
 export default function VerifyOrgEmailPage() {
+  return (
+    <Suspense>
+      <VerifyOrgEmailForm />
+    </Suspense>
+  );
+}
+
+function VerifyOrgEmailForm() {
   const params = useSearchParams();
   const orgId = params.get("orgId");
   const [state, setState] = useState<State>("checking");

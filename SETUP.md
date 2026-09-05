@@ -25,6 +25,7 @@ alerts log a warning and skip, masked calling degrades to direct `tel:` links.
 | `TWILIO_MASK_NUMBER` | no | Public tier hands out real numbers |
 | `NEXT_PUBLIC_BASE_URL` | no | Map links point at `localhost` |
 | `RESQ_TZ` | no | Alert timestamps print in `America/Chicago` |
+| `RESQ_ADMIN_EMAIL` | no | `/admin/responders` refuses everyone |
 
 ## 1. Supabase
 
@@ -55,6 +56,15 @@ into the SQL editor in the dashboard. The seed creates the two demo profiles
 `Authorization: Bearer <token>`. Enable magic-link email under
 **Authentication → Providers → Email**. Nothing else to configure; the seeded
 demo user exists only to own the seeded profiles and cannot log in.
+
+**Redirect URLs (matters once this is deployed, not just local):** two flows
+send a magic-link email and rely on Supabase redirecting back to this app
+afterward — owner login (`/dashboard`) and responder org email confirmation
+(`/responders/apply/verify`). Under **Authentication → URL Configuration**,
+set **Site URL** to your production domain and add
+`https://<your-domain>/**` to **Redirect URLs**, or Supabase will bounce the
+link back to whatever Site URL was set at project creation (usually
+`localhost:3000`) instead of your deployed app.
 
 ## 2. Twilio (optional, but it is what makes the demo land)
 
