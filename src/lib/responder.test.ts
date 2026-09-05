@@ -22,6 +22,20 @@ describe("responder codes", () => {
     maybeSingle.mockResolvedValue({ data: null });
     expect(await verifyCode("NOPE")).toBeNull();
   });
+
+  it("accepts an active code linked to an approved org", async () => {
+    maybeSingle.mockResolvedValue({
+      data: { org_name: "New EMS Co", active: true, org_id: "org-1", responder_orgs: { status: "approved" } },
+    });
+    expect(await verifyCode("NEC-1234")).toBe("New EMS Co");
+  });
+
+  it("rejects an active code whose org is still pending review", async () => {
+    maybeSingle.mockResolvedValue({
+      data: { org_name: "New EMS Co", active: true, org_id: "org-1", responder_orgs: { status: "pending" } },
+    });
+    expect(await verifyCode("NEC-1234")).toBeNull();
+  });
 });
 
 describe("rate limiting", () => {

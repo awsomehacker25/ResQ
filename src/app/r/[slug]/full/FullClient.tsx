@@ -89,6 +89,11 @@ export function FullClient({ slug }: { slug: string }) {
           ← Back to public profile
         </a>
       </p>
+      <p style={{ textAlign: "center", fontSize: 12.5, marginTop: 6 }}>
+        <a className="rq-muted-link" href="/responders/apply">
+          Don&rsquo;t have a code? Register your organization
+        </a>
+      </p>
     </div>
   );
 }

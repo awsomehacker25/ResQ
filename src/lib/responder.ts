@@ -18,16 +18,29 @@ export function rateLimited(key: string, now = Date.now()): boolean {
   return entry.count > MAX_ATTEMPTS;
 }
 
+type CodeRow = {
+  org_name: string;
+  active: boolean;
+  org_id: string | null;
+  responder_orgs: { status: string } | null;
+};
+
 /** Returns the org name for an active code, null otherwise. The caller must
  *  report the same generic failure either way, no hint about which codes
- *  are valid. */
+ *  are valid.
+ *
+ *  A code linked to a self-serve org (org_id set) only works while that
+ *  org's application is approved; a legacy seeded code (org_id null) has no
+ *  org to check and works as long as it is active. */
 export async function verifyCode(code: string): Promise<string | null> {
   const { data } = await serviceClient()
     .from("responders")
-    .select("org_name, active")
+    .select("org_name, active, org_id, responder_orgs(status)")
     .eq("code", code.trim().toUpperCase())
-    .maybeSingle<{ org_name: string; active: boolean }>();
-  return data?.active ? data.org_name : null;
+    .maybeSingle<CodeRow>();
+  if (!data?.active) return null;
+  if (data.org_id && data.responder_orgs?.status !== "approved") return null;
+  return data.org_name;
 }
 
 export function clientKey(request: Request): string {

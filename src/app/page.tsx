@@ -80,10 +80,13 @@ export default function Home() {
       <footer style={{ borderTop: "1px solid var(--border)", padding: "18px 0" }}>
         <div
           className="rq-container"
-          style={{ fontSize: 12.5, color: "var(--faint)", display: "flex", justifyContent: "space-between" }}
+          style={{ fontSize: 12.5, color: "var(--faint)", display: "flex", justifyContent: "space-between", alignItems: "center" }}
         >
           <span>ResQ</span>
           <span>Not a substitute for medical alert jewelry or emergency services.</span>
+          <Link href="/responders/apply" className="rq-hint">
+            First responder org? Register here
+          </Link>
         </div>
       </footer>
     </div>

@@ -6,10 +6,19 @@ values ('00000000-0000-0000-0000-0000000000a1', '00000000-0000-0000-0000-0000000
         'authenticated', 'authenticated', 'demo@resq.app', '', now(), now())
 on conflict (id) do nothing;
 
-insert into responders (code, org_name, active) values
-  ('CFD-4471', 'Chicago Fire Department EMS', true),
-  ('AMR-1180', 'AMR Ambulance', true),
-  ('OLD-0000', 'Retired Service', false)
+-- Two demo orgs already approved, one already rejected, so the self-serve
+-- signup flow (/responders/apply -> /admin/responders) has real states to
+-- show alongside these pre-seeded codes.
+insert into responder_orgs (id, org_name, org_type, contact_email, status, email_verified_at, approved_at) values
+  ('00000000-0000-0000-0000-0000000000c1', 'Chicago Fire Department EMS', 'Fire', 'demo-cfd@resq.app', 'approved', now(), now()),
+  ('00000000-0000-0000-0000-0000000000c2', 'AMR Ambulance', 'EMS', 'demo-amr@resq.app', 'approved', now(), now()),
+  ('00000000-0000-0000-0000-0000000000c3', 'Retired Service', 'Other', 'demo-retired@resq.app', 'rejected', now(), null)
+on conflict (id) do nothing;
+
+insert into responders (code, org_name, active, org_id) values
+  ('CFD-4471', 'Chicago Fire Department EMS', true, '00000000-0000-0000-0000-0000000000c1'),
+  ('AMR-1180', 'AMR Ambulance', true, '00000000-0000-0000-0000-0000000000c2'),
+  ('OLD-0000', 'Retired Service', false, '00000000-0000-0000-0000-0000000000c3')
 on conflict (code) do nothing;
 
 insert into profiles (id, user_id, slug, display_name) values

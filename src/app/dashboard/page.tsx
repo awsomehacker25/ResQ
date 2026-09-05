@@ -39,6 +39,7 @@ export default function DashboardPage() {
   const [scans, setScans] = useState<ScanRow[]>([]);
   const [tab, setTab] = useState<Tab>("fields");
   const [loadingProfile, setLoadingProfile] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
     if (!isSupabaseConfigured()) {
@@ -67,6 +68,18 @@ export default function DashboardPage() {
   useEffect(() => {
     if (token) loadProfiles(token).catch(console.error);
   }, [token, loadProfiles]);
+
+  useEffect(() => {
+    if (!token) {
+      setIsAdmin(false);
+      return;
+    }
+    // Reuses the same server-side admin gate the review queue enforces;
+    // no admin email is ever exposed to the client to make this call.
+    fetch("/api/responder-orgs", { headers: { authorization: `Bearer ${token}` } })
+      .then((res) => setIsAdmin(res.ok))
+      .catch(() => setIsAdmin(false));
+  }, [token]);
 
   const loadProfileData = useCallback(async (tok: string, profileId: string) => {
     setLoadingProfile(true);
@@ -160,6 +173,11 @@ export default function DashboardPage() {
           ResQ
         </Link>
         <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+          {isAdmin && (
+            <Link href="/admin/responders" className="rq-btn rq-btn-ghost rq-btn-sm">
+              Responder review
+            </Link>
+          )}
           <span style={{ fontSize: 13, color: "var(--muted)" }}>{emailAddr}</span>
           <button
             className="rq-btn rq-btn-ghost rq-btn-sm"
