@@ -1,0 +1,28 @@
+import { buildPayload, loadBySlug } from "@/lib/profile";
+import { clientKey, rateLimited, verifyCode } from "@/lib/responder";
+import { jsonBody } from "@/lib/owner";
+import { markUnlocked } from "@/lib/scan";
+
+const DENIED = { error: "Code not recognized" };
+
+/** Responder unlock. Every failure looks the same from outside. */
+export async function POST(request: Request) {
+  if (rateLimited(clientKey(request))) {
+    return Response.json(DENIED, { status: 429 });
+  }
+
+  const body = await jsonBody(request);
+  const slug = typeof body.slug === "string" ? body.slug : "";
+  const code = typeof body.code === "string" ? body.code : "";
+  if (!slug || !code) return Response.json(DENIED, { status: 401 });
+
+  const [record, orgName] = await Promise.all([loadBySlug(slug), verifyCode(code)]);
+  if (!record || !orgName) return Response.json(DENIED, { status: 401 });
+
+  // Visible accountability: the scan log records who unlocked the record.
+  if (typeof body.scanId === "string") await markUnlocked(body.scanId, code.toUpperCase());
+
+  return Response.json(
+    buildPayload(record.profile, record.fields, record.contacts, "gated", orgName),
+  );
+}
