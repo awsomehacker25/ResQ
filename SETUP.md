@@ -61,10 +61,18 @@ demo user exists only to own the seeded profiles and cannot log in.
 send a magic-link email and rely on Supabase redirecting back to this app
 afterward — owner login (`/dashboard`) and responder org email confirmation
 (`/responders/apply/verify`). Under **Authentication → URL Configuration**,
-set **Site URL** to your production domain and add
-`https://<your-domain>/**` to **Redirect URLs**, or Supabase will bounce the
-link back to whatever Site URL was set at project creation (usually
-`localhost:3000`) instead of your deployed app.
+add both to **Redirect URLs** so local dev and prod keep working side by
+side (this list takes multiple entries; it's not either/or):
+
+```
+http://localhost:3000/**
+https://<your-domain>/**
+```
+
+**Site URL** only sets the default fallback and can stay whichever you use
+most; it doesn't restrict which redirects are allowed. Without the deployed
+domain in this list, a magic-link click on prod bounces back to
+`localhost:3000` instead of your live app.
 
 ## 2. Twilio (optional, but it is what makes the demo land)
 
