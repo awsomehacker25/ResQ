@@ -139,6 +139,13 @@ export default function DashboardPage() {
     setContacts((prev) => prev.filter((c) => c.id !== id));
   }
 
+  async function refreshScans() {
+    if (!token || !activeId) return;
+    const s = await api(token).get(`/api/profiles/${activeId}/scans`);
+    setScans(s.scans);
+    setTab("scans");
+  }
+
   const previewPayload = activeProfile
     ? buildPayload(activeProfile, fields, contacts, "public")
     : null;
@@ -222,10 +229,13 @@ export default function DashboardPage() {
                   Live preview
                 </p>
                 <div className="rq-phone-frame">
-                  <ProfileCard payload={previewPayload} />
+                  <ProfileCard
+                    payload={previewPayload}
+                    responderHref={`/r/${activeProfile.slug}/full`}
+                  />
                 </div>
               </div>
-              <QrPanel slug={activeProfile.slug} />
+              <QrPanel slug={activeProfile.slug} onScan={refreshScans} />
             </div>
           )}
         </div>

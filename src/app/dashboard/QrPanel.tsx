@@ -3,8 +3,9 @@
 import { useState } from "react";
 import { QrIcon } from "@/components/icons";
 
-export function QrPanel({ slug }: { slug: string }) {
+export function QrPanel({ slug, onScan }: { slug: string; onScan?: () => void }) {
   const [copied, setCopied] = useState(false);
+  const [simulating, setSimulating] = useState(false);
   const origin = typeof window !== "undefined" ? window.location.origin : "";
   const publicUrl = `${origin}/r/${slug}`;
 
@@ -15,6 +16,25 @@ export function QrPanel({ slug }: { slug: string }) {
       setTimeout(() => setCopied(false), 1800);
     } catch {
       // clipboard API unavailable — nothing to fall back to silently
+    }
+  }
+
+  /**
+   * Conference wifi fails and phone cameras do not always reach the network,
+   * so the demo needs a scan path that runs from this page. Same endpoint the
+   * real scan uses: it logs the row and fires the SMS fan-out.
+   */
+  async function simulateScan() {
+    setSimulating(true);
+    try {
+      await fetch("/api/scan", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ slug, lat: null, lng: null }),
+      });
+      onScan?.();
+    } finally {
+      setSimulating(false);
     }
   }
 
@@ -49,6 +69,14 @@ export function QrPanel({ slug }: { slug: string }) {
         >
           Print wallet card
         </a>
+        <button
+          className="rq-btn rq-btn-ghost rq-btn-block rq-btn-sm"
+          onClick={simulateScan}
+          disabled={simulating}
+        >
+          {simulating ? <span className="rq-spinner rq-spinner-dark" /> : null}
+          Simulate a scan
+        </button>
       </div>
     </div>
   );

@@ -14,7 +14,7 @@ export function ScanLog({ scans }: { scans: ScanRow[] }) {
   if (scans.length === 0) {
     return (
       <p className="rq-hint">
-        No scans yet. Scan the QR code, or use the simulate-scan command in the README.
+        No scans yet. Scan the QR code, or use &ldquo;Simulate a scan&rdquo; beside it.
       </p>
     );
   }

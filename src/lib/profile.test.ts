@@ -106,7 +106,17 @@ describe("contact masking", () => {
 
   it("falls back to a direct tel link when no mask number is configured", () => {
     delete process.env.TWILIO_MASK_NUMBER;
-    expect(filterContacts([contact({})], "public")[0].tel).toBe("tel:+13125550101");
+    const [c] = filterContacts([contact({})], "public");
+    expect(c.tel).toBe("tel:+13125550101");
+    // The dial-code hint keys off this: a direct link must never be captioned
+    // "enter code 4471", which would tell a scanner to do something useless.
+    expect(c.masked).toBe(false);
+  });
+
+  it("marks a genuinely masked contact so the dial-code hint can show", () => {
+    process.env.TWILIO_MASK_NUMBER = "+13125559999";
+    expect(filterContacts([contact({})], "public")[0].masked).toBe(true);
+    expect(filterContacts([contact({})], "gated")[0].masked).toBe(false);
   });
 });
 

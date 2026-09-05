@@ -132,7 +132,7 @@ export function ProfileCard({
                       Call {contact.name}
                       {contact.relationship && <small>&nbsp;({contact.relationship})</small>}
                     </a>
-                    {!contact.phone && (
+                    {contact.masked && (
                       <p className="rq-dial-hint">If prompted, enter code {contact.dialCode}</p>
                     )}
                   </div>

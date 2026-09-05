@@ -23,6 +23,9 @@ export type PublicContact = {
   phone?: string;
   /** tel: href — masked for public scanners, direct for responders. */
   tel: string;
+  /** True only when tel actually routes through the IVR, so the dial-code
+   *  hint is never shown next to a direct-dial link. */
+  masked: boolean;
 };
 
 export type ProfilePayload = {
@@ -69,10 +72,14 @@ export function filterContacts(contacts: Contact[], viewerTier: Tier): PublicCon
       const base = { name: c.name, relationship: c.relationship, dialCode: c.dial_code };
       // Responders have authenticated and are accountable via the scan log,
       // so the authenticated path carries no masking failure modes.
-      if (viewerTier === "gated") return { ...base, phone: c.phone, tel: `tel:${c.phone}` };
+      if (viewerTier === "gated")
+        return { ...base, phone: c.phone, tel: `tel:${c.phone}`, masked: false };
       // A stranger who scans must be able to call without walking away with
-      // a permanent record of the contact's personal number.
-      return { ...base, tel: maskedTel(c.dial_code) ?? `tel:${c.phone}` };
+      // a permanent record of the contact's personal number. With no mask
+      // number configured this degrades to a direct line — and then the
+      // dial-code hint must not claim otherwise.
+      const masked = maskedTel(c.dial_code);
+      return { ...base, tel: masked ?? `tel:${c.phone}`, masked: Boolean(masked) };
     });
 }
 
