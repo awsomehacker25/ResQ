@@ -2,5 +2,10 @@ node_modules
 .next
 *.tsbuildinfo
 next-env.d.ts
+
+# Secrets. .env.example is the only env file that may be committed.
 .env
-.env*.local
+.env.*
+!.env.example
+
+supabase/.temp/
