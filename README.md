@@ -3,8 +3,30 @@
 A QR code that gives first responders what they need to save your life, and gives
 you control over what a stranger sees. See [the design spec](docs/superpowers/specs/2026-09-05-resq-design.md).
 
-**This repo currently contains the backend only** — schema, API routes, and the
-scan/notify/masked-call machinery. No UI.
+**Stack:** Next.js (App Router) + Supabase (Postgres, auth, RLS) + Twilio SMS.
+
+## How it works
+
+Every field and contact on a profile is tagged `public` or `gated`. Scanning the
+QR code opens `/r/[slug]`, which renders only the public tier — no login, no
+app install, readable by a stranger holding someone else's phone:
+
+- **Public tier** — life-saving basics (allergies, conditions, blood type) and
+  contacts, shown instantly. Calls go through a masked Twilio number so a
+  stranger can reach a contact without ever seeing their real phone number.
+- **Gated tier** — everything else (address, full medication list, DNR status,
+  physician). Unlocked at `/r/[slug]/full` with a responder code, which also
+  gives direct `tel:` links and stamps the scan log with the responding
+  department.
+
+Every scan — public or gated — inserts a row into `scans` and fans out an SMS
+to the profile's notify-flagged contacts with an approximate location, turning
+a static card into a live alert. The owner manages all of this from
+`/dashboard`: field/contact editing with per-item tier toggles, a live preview
+of the public page, the scan log, and QR/print export.
+
+Slugs are random 8-character strings, never sequential, so a profile can't be
+found by enumeration.
 
 ## Setup
 
@@ -38,6 +60,16 @@ never fatal. Full walkthrough in [SETUP.md](SETUP.md).
 Owner routes take `Authorization: Bearer <supabase access token>`; RLS scopes
 every row to the caller.
 
+## Pages
+
+| Route | Purpose |
+|---|---|
+| `/` | Landing page |
+| `/r/[slug]` | Public scan card — critical-alert band, masked call buttons, empty-tier frame |
+| `/r/[slug]/full` | Responder-code unlock flow |
+| `/dashboard` | Manage profiles/fields/contacts, live preview, QR/print export |
+| `/print/[slug]` | Print layout for the QR badge |
+
 ### Simulate a scan
 
 Conference wifi fails, so the demo needs a path that does not depend on a phone
@@ -62,8 +94,3 @@ npm run typecheck
 
 Tier filtering is server-side and asserted against the serialized payload — a
 gated field must never reach the wire, so hiding it in CSS would not count.
-
-## Not built yet
-
-Every UI surface: `/r/[slug]`, `/r/[slug]/full`, `/dashboard`, and the PDF /
-badge print layouts.
