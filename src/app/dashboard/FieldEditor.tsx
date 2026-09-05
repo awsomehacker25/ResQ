@@ -23,7 +23,7 @@ function TierToggle({ tier, onChange }: { tier: Tier; onChange: (t: Tier) => voi
     <button
       className="rq-toggle"
       data-on={tier === "public"}
-      title={tier === "public" ? "Public — click to gate" : "Gated — click to make public"}
+      title={tier === "public" ? "Public (click to gate)" : "Gated (click to make public)"}
       onClick={() => onChange(tier === "public" ? "gated" : "public")}
     />
   );
@@ -217,7 +217,7 @@ export function FieldEditor({
 
       {fields.length === 0 && (
         <p className="rq-hint" style={{ marginBottom: 14 }}>
-          No fields yet — add allergies, conditions, or medications below.
+          No fields yet. Add allergies, conditions, or medications below.
         </p>
       )}
 

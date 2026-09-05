@@ -2,7 +2,7 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 import { bearerToken, userClient } from "./supabase";
 
 /**
- * Owner-scoped client. RLS does the authorization — every query through it
+ * Owner-scoped client. RLS does the authorization; every query through it
  * sees only rows belonging to the caller, so route handlers never re-check
  * ownership by hand.
  */

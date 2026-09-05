@@ -1,4 +1,4 @@
-# ResQ — Design Spec
+# ResQ: Design Spec
 
 **Date:** 2026-09-05
 **Target:** Hackathon demo (weekend, solo/small team)
@@ -6,7 +6,7 @@
 
 ## Problem
 
-In an emergency, the person who reaches you first knows nothing about you. Allergies, blood type, medications, conditions, who to call — all of it is locked in your head or your phone, and you are unconscious. Medical ID bracelets hold one line of text. Phone lock screens hold slightly more. Neither can be updated, neither can call your family, and neither can distinguish between a bystander and a paramedic.
+In an emergency, the person who reaches you first knows nothing about you. Allergies, blood type, medications, conditions, who to call: all of it is locked in your head or your phone, and you are unconscious. Medical ID bracelets hold one line of text. Phone lock screens hold slightly more. Neither can be updated, neither can call your family, and neither can distinguish between a bystander and a paramedic.
 
 ResQ is a QR code on your keychain, phone case, or wallet card. Scanning it opens a profile whose contents you configured in advance, tiered by who is looking.
 
@@ -28,13 +28,13 @@ ResQ is a QR code on your keychain, phone case, or wallet card. Scanning it open
 
 **Stack:** Next.js (App Router) + Supabase (Postgres, auth, RLS) + Twilio SMS, deployed on Vercel.
 
-Vercel gives a public HTTPS URL, which is a hard requirement — a QR pointing at `localhost` cannot be scanned from a phone.
+Vercel gives a public HTTPS URL, which is a hard requirement: a QR pointing at `localhost` cannot be scanned from a phone.
 
 ### Routes
 
 | Route | Audience | Auth |
 |---|---|---|
-| `/dashboard` | Profile owner — field editor, contacts, scan log, QR download | Supabase magic link |
+| `/dashboard` | Profile owner: field editor, contacts, scan log, QR download | Supabase magic link |
 | `/r/[slug]` | Anyone scanning | None; public tier only |
 | `/r/[slug]/full` | First responder | Responder code |
 | `/api/scan` | Internal | Fires on `/r/[slug]` render |
@@ -55,7 +55,7 @@ responders    code, org_name, active
 
 `contacts.dial_code` is a 4-digit code, unique within a profile, used to route masked calls (see below).
 
-**One account owns many profiles.** `profiles.user_id` is not unique, so a parent creating a child's profile requires no schema change — only a profile switcher in the dashboard. Guardian *invites* (granting a second adult access to an existing profile) would require a join table and are out of scope.
+**One account owns many profiles.** `profiles.user_id` is not unique, so a parent creating a child's profile requires no schema change; only a profile switcher in the dashboard. Guardian *invites* (granting a second adult access to an existing profile) would require a join table and are out of scope.
 
 **`fields` is row-per-fact, not a JSON blob.** Custom fields mean the schema cannot be columns. Rows carry `tier` and `category` per fact, which is what the responder view needs to group and rank.
 
@@ -87,20 +87,20 @@ ResQ alert: Jacob's emergency code was just scanned near
 Map: https://resq.app/s/9fk2m
 ```
 
-Location comes from browser geolocation when granted, IP-derived city otherwise. When neither is available, the message says "location unavailable" rather than omitting the line — an absent line reads as an app bug.
+Location comes from browser geolocation when granted, IP-derived city otherwise. When neither is available, the message says "location unavailable" rather than omitting the line; an absent line reads as an app bug.
 
 ### Masked calling
 
 Public-tier scanners must be able to reach a contact without learning their number. Anyone can photograph a QR code on a bag; raw `tel:` links would hand out family phone numbers permanently, recorded in the scanner's call history.
 
-- **Public tier:** the call button dials a single shared Twilio number with post-dial DTMF digits identifying the contact — `tel:+1XXXXXXXXXX,,,4471#`. Twilio answers, matches the code to `contacts.dial_code`, and bridges to the real number. The scanner never sees it.
+- **Public tier:** the call button dials a single shared Twilio number with post-dial DTMF digits identifying the contact: `tel:+1XXXXXXXXXX,,,4471#`. Twilio answers, matches the code to `contacts.dial_code`, and bridges to the real number. The scanner never sees it.
 - **Gated tier:** verified responders get direct `tel:` links. They have authenticated, they are accountable via the scan log, and the authenticated path should carry no extra failure modes.
 
-Post-dial digits are unreliable on some Android builds, so the IVR falls back to a spoken prompt — "enter the four-digit code shown on the screen" — and the code is always printed next to the call button for exactly this case.
+Post-dial digits are unreliable on some Android builds, so the IVR falls back to a spoken prompt ("enter the four-digit code shown on the screen"), and the code is always printed next to the call button for exactly this case.
 
 ## Surfaces
 
-### 1. Public scan page — `/r/[slug]`
+### 1. Public scan page: `/r/[slug]`
 
 Built for a stranger holding someone else's phone in a parking lot. Server-rendered, readable without JavaScript, legible at arm's length.
 
@@ -110,7 +110,7 @@ Built for a stranger holding someone else's phone in a parking lot. Server-rende
 │           34 · O NEGATIVE      │
 ├────────────────────────────────┤
 │ ⚠ SEVERE ALLERGY               │
-│   Penicillin — anaphylaxis     │
+│   Penicillin: anaphylaxis      │
 │ ⚠ ON BLOOD THINNERS            │
 │   Warfarin 5mg daily           │
 ├────────────────────────────────┤
@@ -129,7 +129,7 @@ Rules:
 
 ### 2. Empty public tier
 
-A user may set every field to gated. The page must not render blank — blank reads as a broken app, and the responder never finds the unlock.
+A user may set every field to gated. The page must not render blank; blank reads as a broken app, and the responder never finds the unlock.
 
 ```
 ┌────────────────────────────────┐
@@ -142,11 +142,11 @@ A user may set every field to gated. The page must not render blank — blank re
 └────────────────────────────────┘
 ```
 
-### 3. Responder view — `/r/[slug]/full`
+### 3. Responder view: `/r/[slug]/full`
 
-Everything: DOB, address, full medication list, insurance, physician, DNR/advance directive, organ donor status. Header displays which department unlocked the record — visible accountability.
+Everything: DOB, address, full medication list, insurance, physician, DNR/advance directive, organ donor status. Header displays which department unlocked the record: visible accountability.
 
-### 4. Owner dashboard — `/dashboard`
+### 4. Owner dashboard: `/dashboard`
 
 - **Profile switcher.** One account holds many profiles; a parent manages their own alongside each child's. New profiles start from the same editor.
 - Field editor grouped by category; every row has a public/gated toggle.
@@ -208,9 +208,9 @@ This makes guardian-managed profiles load-bearing rather than optional: the peop
 - Real first responder verification (seeded codes only)
 - HIPAA compliance; encryption beyond Supabase defaults
 - Offline scanning
-- Guardian *invites* — sharing an existing profile with a second adult account
+- Guardian *invites*: sharing an existing profile with a second adult account
 - Internationalization, though a spoken-language field is included because it matters at a real scene
-- Native apps — web only; the phone's camera app handles scanning
+- Native apps: web only; the phone's camera app handles scanning
 
 ## Demo plan
 
@@ -219,6 +219,6 @@ Preparation:
 - Build a "simulate scan" button. Conference wifi fails; the demo needs a path that does not depend on a phone camera reaching the network.
 - Print the QR on paper and keep it on a second screen.
 - Seed two profiles: one with a rich public tier, one locked down, to demo both states back to back.
-- If masked calling ships, verify the Twilio IVR from at least one iPhone and one Android — post-dial DTMF behaviour differs between them.
+- If masked calling ships, verify the Twilio IVR from at least one iPhone and one Android; post-dial DTMF behaviour differs between them.
 
 The three-minute story: print a QR, stick it on a phone case, hand it to a judge. They scan it with their own camera. Allergies appear. The presenter's phone buzzes on stage. Then show the locked-down profile that reveals nothing, and the scan log listing the judge's own scan.

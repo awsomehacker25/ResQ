@@ -8,7 +8,7 @@ function TierToggle({ tier, onChange }: { tier: Tier; onChange: (t: Tier) => voi
     <button
       className="rq-toggle"
       data-on={tier === "public"}
-      title={tier === "public" ? "Public — click to gate" : "Gated — click to make public"}
+      title={tier === "public" ? "Public (click to gate)" : "Gated (click to make public)"}
       onClick={() => onChange(tier === "public" ? "gated" : "public")}
     />
   );

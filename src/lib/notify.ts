@@ -10,7 +10,7 @@ function baseUrl(): string {
 /**
  * The SMS must be actionable on its own: "someone scanned Jacob's code"
  * tells a family member nothing they can act on.
- * When no location is known the line says so — an absent line reads as a bug.
+ * When no location is known the line says so; an absent line reads as a bug.
  */
 export function buildAlert(
   displayName: string,

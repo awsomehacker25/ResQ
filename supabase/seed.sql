@@ -19,7 +19,7 @@ on conflict (id) do nothing;
 
 -- rank mirrors CATEGORY_RANK in src/lib/fields.ts
 insert into fields (profile_id, key, label, value, tier, category, rank) values
-  ('00000000-0000-0000-0000-0000000000b1', 'allergy_penicillin', 'Severe allergy', 'Penicillin — anaphylaxis', 'public', 'critical', 0),
+  ('00000000-0000-0000-0000-0000000000b1', 'allergy_penicillin', 'Severe allergy', 'Penicillin (anaphylaxis)', 'public', 'critical', 0),
   ('00000000-0000-0000-0000-0000000000b1', 'blood_type', 'Blood type', 'O negative', 'public', 'critical', 0),
   ('00000000-0000-0000-0000-0000000000b1', 'blood_thinners', 'On blood thinners', 'Warfarin 5mg daily', 'public', 'critical', 0),
   ('00000000-0000-0000-0000-0000000000b1', 'age', 'Age', '34', 'public', 'identity', 200),
@@ -27,8 +27,8 @@ insert into fields (profile_id, key, label, value, tier, category, rank) values
   ('00000000-0000-0000-0000-0000000000b1', 'dob', 'Date of birth', '1992-03-11', 'gated', 'identity', 200),
   ('00000000-0000-0000-0000-0000000000b1', 'address', 'Home address', '1400 W Monroe St, Chicago IL', 'gated', 'identity', 200),
   ('00000000-0000-0000-0000-0000000000b1', 'medications', 'Medications', 'Warfarin 5mg, Lisinopril 10mg', 'gated', 'medical', 100),
-  ('00000000-0000-0000-0000-0000000000b1', 'insurance', 'Insurance', 'BCBS IL — 8841902', 'gated', 'admin', 300),
-  ('00000000-0000-0000-0000-0000000000b1', 'physician', 'Physician', 'Dr. Amara Osei — (312) 555-0142', 'gated', 'admin', 300),
+  ('00000000-0000-0000-0000-0000000000b1', 'insurance', 'Insurance', 'BCBS IL, 8841902', 'gated', 'admin', 300),
+  ('00000000-0000-0000-0000-0000000000b1', 'physician', 'Physician', 'Dr. Amara Osei, (312) 555-0142', 'gated', 'admin', 300),
   ('00000000-0000-0000-0000-0000000000b1', 'organ_donor', 'Organ donor', 'Yes', 'gated', 'admin', 300),
   -- locked-down profile: nothing public at all
   ('00000000-0000-0000-0000-0000000000b2', 'conditions', 'Conditions', 'Type 1 diabetes', 'gated', 'critical', 0),

@@ -8,18 +8,18 @@ you control over what a stranger sees. See [the design spec](docs/superpowers/sp
 ## How it works
 
 Every field and contact on a profile is tagged `public` or `gated`. Scanning the
-QR code opens `/r/[slug]`, which renders only the public tier — no login, no
+QR code opens `/r/[slug]`, which renders only the public tier: no login, no
 app install, readable by a stranger holding someone else's phone:
 
-- **Public tier** — life-saving basics (allergies, conditions, blood type) and
+- **Public tier:** life-saving basics (allergies, conditions, blood type) and
   contacts, shown instantly. Calls go through a masked Twilio number so a
   stranger can reach a contact without ever seeing their real phone number.
-- **Gated tier** — everything else (address, full medication list, DNR status,
+- **Gated tier:** everything else (address, full medication list, DNR status,
   physician). Unlocked at `/r/[slug]/full` with a responder code, which also
   gives direct `tel:` links and stamps the scan log with the responding
   department.
 
-Every scan — public or gated — inserts a row into `scans` and fans out an SMS
+Every scan (public or gated) inserts a row into `scans` and fans out an SMS
 to the profile's notify-flagged contacts with an approximate location, turning
 a static card into a live alert. The owner manages all of this from
 `/dashboard`: field/contact editing with per-item tier toggles, a live preview
@@ -65,7 +65,7 @@ every row to the caller.
 | Route | Purpose |
 |---|---|
 | `/` | Landing page |
-| `/r/[slug]` | Public scan card — critical-alert band, masked call buttons, empty-tier frame |
+| `/r/[slug]` | Public scan card: critical-alert band, masked call buttons, empty-tier frame |
 | `/r/[slug]/full` | Responder-code unlock flow |
 | `/dashboard` | Manage profiles/fields/contacts, live preview, QR/print export |
 | `/print/[slug]` | Print layout for the QR badge |
@@ -92,5 +92,5 @@ npm test        # scan path: tier filtering, slug resolution, notify fan-out
 npm run typecheck
 ```
 
-Tier filtering is server-side and asserted against the serialized payload — a
+Tier filtering is server-side and asserted against the serialized payload: a
 gated field must never reach the wire, so hiding it in CSS would not count.

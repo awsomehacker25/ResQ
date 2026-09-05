@@ -1,7 +1,7 @@
 import { generateSlug } from "@/lib/profile";
 import { jsonBody, ownerDb, UNAUTHORIZED } from "@/lib/owner";
 
-/** Every profile this account owns — its own plus each child's. */
+/** Every profile this account owns: its own plus each child's. */
 export async function GET(request: Request) {
   const db = ownerDb(request);
   if (!db) return UNAUTHORIZED;

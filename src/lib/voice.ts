@@ -24,7 +24,7 @@ export async function allocateDialCode(): Promise<string> {
 
 /**
  * Looks the dial code up and bridges to the real number. The caller never
- * sees or hears it — that is the whole point of the masked path.
+ * sees or hears it; that is the whole point of the masked path.
  */
 export async function bridgeTo(digits: string): Promise<Response> {
   const response = twiml();
@@ -48,7 +48,7 @@ export async function bridgeTo(digits: string): Promise<Response> {
  * Twilio webhooks are public URLs, so the signature is the only thing
  * standing between a stranger and a contact's real number: an unsigned
  * request could enumerate all 10,000 dial codes and read each bridged
- * number straight out of the TwiML. Fails closed — no token, no calls.
+ * number straight out of the TwiML. Fails closed: no token, no calls.
  */
 export function validSignature(request: Request, form: FormData): boolean {
   const token = process.env.TWILIO_AUTH_TOKEN;

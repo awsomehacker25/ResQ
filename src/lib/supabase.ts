@@ -9,7 +9,7 @@ function required(name: string): string {
 /**
  * Service-role client. Every public and responder read goes through this:
  * anon has no RLS policy at all, so slugs cannot be enumerated from a
- * browser. Server-side only — never import from client code.
+ * browser. Server-side only; never import from client code.
  */
 export function serviceClient(): SupabaseClient {
   return createClient(

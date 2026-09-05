@@ -19,7 +19,7 @@ export function rateLimited(key: string, now = Date.now()): boolean {
 }
 
 /** Returns the org name for an active code, null otherwise. The caller must
- *  report the same generic failure either way — no hint about which codes
+ *  report the same generic failure either way, no hint about which codes
  *  are valid. */
 export async function verifyCode(code: string): Promise<string | null> {
   const { data } = await serviceClient()

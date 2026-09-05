@@ -8,7 +8,7 @@ const CATEGORY_LABEL: Record<string, string> = {
 };
 
 // These two identity facts double as the header subtitle, per the design
-// spec's mockup ("34 · O NEGATIVE") — omitted from the Identity list below
+// spec's mockup ("34 · O NEGATIVE"), omitted from the Identity list below
 // so they aren't shown twice.
 const SUBTITLE_KEYS = ["age", "blood_type"];
 

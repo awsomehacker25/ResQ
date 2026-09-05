@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { FullClient } from "./FullClient";
 
-export const metadata: Metadata = { title: "ResQ — Responder unlock" };
+export const metadata: Metadata = { title: "ResQ: Responder unlock" };
 
 export default async function ResponderPage({
   params,

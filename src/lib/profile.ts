@@ -21,7 +21,7 @@ export type PublicContact = {
   dialCode: string;
   /** Present only on the gated tier. */
   phone?: string;
-  /** tel: href — masked for public scanners, direct for responders. */
+  /** tel: href, masked for public scanners, direct for responders. */
   tel: string;
   /** True only when tel actually routes through the IVR, so the dial-code
    *  hint is never shown next to a direct-dial link. */
@@ -35,7 +35,7 @@ export type ProfilePayload = {
   tier: Tier;
   fields: PublicField[];
   contacts: PublicContact[];
-  /** True when the requested tier hid something — drives the empty-tier frame. */
+  /** True when the requested tier hid something; drives the empty-tier frame. */
   hasHiddenContent: boolean;
   /** Department that unlocked the record; gated tier only. */
   unlockedBy?: string;
@@ -48,7 +48,7 @@ function visible(rowTier: Tier, viewerTier: Tier): boolean {
 
 /**
  * Server-side tier filtering. A gated row must never reach the response
- * payload — hiding it with CSS would ship it in the HTML.
+ * payload; hiding it with CSS would ship it in the HTML.
  */
 export function filterFields(fields: Field[], viewerTier: Tier): PublicField[] {
   return fields
@@ -76,7 +76,7 @@ export function filterContacts(contacts: Contact[], viewerTier: Tier): PublicCon
         return { ...base, phone: c.phone, tel: `tel:${c.phone}`, masked: false };
       // A stranger who scans must be able to call without walking away with
       // a permanent record of the contact's personal number. With no mask
-      // number configured this degrades to a direct line — and then the
+      // number configured this degrades to a direct line, and then the
       // dial-code hint must not claim otherwise.
       const masked = maskedTel(c.dial_code);
       return { ...base, tel: masked ?? `tel:${c.phone}`, masked: Boolean(masked) };
@@ -107,7 +107,7 @@ export function buildPayload(
 
 export type ProfileRecord = { profile: Profile; fields: Field[]; contacts: Contact[] };
 
-/** Returns null for an unknown slug — never distinguishes "never existed"
+/** Returns null for an unknown slug; never distinguishes "never existed"
  *  from "deleted". */
 export async function loadBySlug(slug: string): Promise<ProfileRecord | null> {
   const db = serviceClient();

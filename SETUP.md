@@ -11,7 +11,7 @@ cp .env.example .env.local
 
 ## Minimum to boot
 
-Only the three Supabase vars are required. With Twilio unset the app runs fine —
+Only the three Supabase vars are required. With Twilio unset the app runs fine:
 alerts log a warning and skip, masked calling degrades to direct `tel:` links.
 
 | Variable | Required | Without it |
@@ -38,7 +38,7 @@ Create a project at [supabase.com](https://supabase.com) (free tier is enough).
 
 The service role key **bypasses RLS entirely**. It is only ever imported by
 `src/lib/supabase.ts` on the server. Never expose it to a client, and never give
-it a `NEXT_PUBLIC_` prefix — that prefix ships a value to the browser.
+it a `NEXT_PUBLIC_` prefix; that prefix ships a value to the browser.
 
 Then apply the schema. Either link the CLI:
 
@@ -53,7 +53,7 @@ into the SQL editor in the dashboard. The seed creates the two demo profiles
 
 **Auth:** the owner routes expect a Supabase access token as
 `Authorization: Bearer <token>`. Enable magic-link email under
-**Authentication → Providers → Email**. Nothing else to configure — the seeded
+**Authentication → Providers → Email**. Nothing else to configure; the seeded
 demo user exists only to own the seeded profiles and cannot log in.
 
 ## 2. Twilio (optional, but it is what makes the demo land)
@@ -64,7 +64,7 @@ Sign up at [twilio.com](https://twilio.com). **Console dashboard** shows:
 - Auth Token → `TWILIO_AUTH_TOKEN`
 
 Buy one number under **Phone Numbers → Buy a number** (SMS + Voice capable). Put
-it in **both** `TWILIO_SMS_FROM` and `TWILIO_MASK_NUMBER` — one number can do both
+it in **both** `TWILIO_SMS_FROM` and `TWILIO_MASK_NUMBER`; one number can do both
 jobs. Use E.164 format: `+13125551234`.
 
 **Trial accounts can only message verified numbers.** Add every phone you plan to
@@ -94,17 +94,17 @@ calling exists to prevent. With no auth token set the endpoints refuse
 everything, so the IVR simply will not work until Twilio is configured.
 
 If you tunnel with ngrok, the webhook URL Twilio signs must match the URL it
-dialed — set `NEXT_PUBLIC_BASE_URL` and the Twilio console to the same https
+dialed; set `NEXT_PUBLIC_BASE_URL` and the Twilio console to the same https
 origin, or every call will 403.
 
-Test it end to end from **one iPhone and one Android** — post-dial DTMF behaviour
+Test it end to end from **one iPhone and one Android**; post-dial DTMF behaviour
 differs between them, which is exactly why the spoken-prompt fallback exists.
 
 ## 3. Base URL
 
 `NEXT_PUBLIC_BASE_URL` is what gets embedded in the QR code and in the map link
 inside every alert SMS. Locally `http://localhost:3000` is fine, but **a QR
-pointing at localhost cannot be scanned from a phone** — set this to the real
+pointing at localhost cannot be scanned from a phone.** Set this to the real
 Vercel URL before printing anything.
 
 ## 4. Vercel
@@ -112,7 +112,7 @@ Vercel URL before printing anything.
 Add every variable above under **Project → Settings → Environment Variables**.
 `.env.local` is not read by Vercel.
 
-Set `NEXT_PUBLIC_BASE_URL` to the production domain, not a preview URL — preview
+Set `NEXT_PUBLIC_BASE_URL` to the production domain, not a preview URL; preview
 URLs change on every deploy and would invalidate printed codes.
 
 ## Gotchas
@@ -135,6 +135,6 @@ curl -s localhost:3000/api/scan -H 'content-type: application/json' \
   -d '{"slug":"jk4m2xq9"}' | jq '.displayName, .fields'
 ```
 
-Fields come back and — if Twilio is configured and the recipient verified — a
+Fields come back and, if Twilio is configured and the recipient verified, a
 phone buzzes. A 404 means the seed did not run. `Missing env var` means step 1 is
 incomplete.

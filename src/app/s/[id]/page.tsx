@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { serviceClient } from "@/lib/supabase";
 import { ShieldIcon } from "@/components/icons";
 
-export const metadata: Metadata = { title: "ResQ — Scan alert" };
+export const metadata: Metadata = { title: "ResQ: Scan alert" };
 
 type ScanDetail = {
   scanned_at: string;
@@ -17,7 +17,7 @@ type ScanDetail = {
 /**
  * The destination of the map link in every alert SMS. Reached by a family
  * member who just got a text, so it answers who, when and where and nothing
- * else — the scan id is the only credential, and it must not become a way
+ * else; the scan id is the only credential, and it must not become a way
  * to read someone's medical record.
  */
 export default async function ScanAlertPage({ params }: { params: Promise<{ id: string }> }) {

@@ -4,7 +4,7 @@ import { ProfileCard } from "@/components/ProfileCard";
 import { ShieldIcon } from "@/components/icons";
 import { ScanLogger } from "./ScanLogger";
 
-export const metadata: Metadata = { title: "ResQ — Emergency profile" };
+export const metadata: Metadata = { title: "ResQ: Emergency profile" };
 
 export default async function PublicProfilePage({
   params,

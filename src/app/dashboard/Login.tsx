@@ -17,7 +17,7 @@ export function Login() {
             <h1 style={{ fontSize: 19, margin: "0 0 8px" }}>Supabase isn&rsquo;t configured</h1>
             <p style={{ color: "var(--muted)", fontSize: 14, lineHeight: 1.5 }}>
               Set <code>NEXT_PUBLIC_SUPABASE_URL</code> and{" "}
-              <code>NEXT_PUBLIC_SUPABASE_ANON_KEY</code> in <code>.env.local</code> — see{" "}
+              <code>NEXT_PUBLIC_SUPABASE_ANON_KEY</code> in <code>.env.local</code>, see{" "}
               <code>SETUP.md</code>.
             </p>
           </div>
@@ -64,7 +64,7 @@ export function Login() {
               margin: "0 0 26px",
             }}
           >
-            We&rsquo;ll email you a magic link — no password needed.
+            We&rsquo;ll email you a magic link, no password needed.
           </p>
 
           {status === "sent" ? (

@@ -15,7 +15,7 @@ export function QrPanel({ slug, onScan }: { slug: string; onScan?: () => void })
       setCopied(true);
       setTimeout(() => setCopied(false), 1800);
     } catch {
-      // clipboard API unavailable — nothing to fall back to silently
+      // clipboard API unavailable, nothing to fall back to silently
     }
   }
 
@@ -43,7 +43,7 @@ export function QrPanel({ slug, onScan }: { slug: string; onScan?: () => void })
       <p className="rq-panel-title">
         <QrIcon size={15} /> QR code
       </p>
-      <p className="rq-panel-sub">Points at the public profile — editing it never breaks the code.</p>
+      <p className="rq-panel-sub">Points at the public profile. Editing it never breaks the code.</p>
       <div className="rq-qr-box">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img className="rq-qr-img" src={`/api/qr/${slug}?size=512`} alt="ResQ QR code" />

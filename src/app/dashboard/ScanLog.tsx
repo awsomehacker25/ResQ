@@ -40,7 +40,7 @@ export function ScanLog({ scans }: { scans: ScanRow[] }) {
                   {scan.tier}
                 </span>
               </td>
-              <td>{scan.responder_code ?? "—"}</td>
+              <td>{scan.responder_code ?? "-"}</td>
             </tr>
           ))}
         </tbody>
