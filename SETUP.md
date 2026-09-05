@@ -86,6 +86,17 @@ Locally, tunnel first:
 npx ngrok http 3000     # then use the https URL ngrok prints
 ```
 
+The webhook routes reject any request without a valid `X-Twilio-Signature`,
+which is computed from `TWILIO_AUTH_TOKEN`. This is not optional hardening: an
+unsigned caller could otherwise walk all 10,000 dial codes and read each
+contact's real number out of the TwiML response, which is the exact thing masked
+calling exists to prevent. With no auth token set the endpoints refuse
+everything, so the IVR simply will not work until Twilio is configured.
+
+If you tunnel with ngrok, the webhook URL Twilio signs must match the URL it
+dialed — set `NEXT_PUBLIC_BASE_URL` and the Twilio console to the same https
+origin, or every call will 403.
+
 Test it end to end from **one iPhone and one Android** — post-dial DTMF behaviour
 differs between them, which is exactly why the spoken-prompt fallback exists.
 

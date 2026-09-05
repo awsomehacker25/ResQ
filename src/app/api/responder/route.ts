@@ -20,7 +20,7 @@ export async function POST(request: Request) {
   if (!record || !orgName) return Response.json(DENIED, { status: 401 });
 
   // Visible accountability: the scan log records who unlocked the record.
-  if (typeof body.scanId === "string") await markUnlocked(body.scanId, code.toUpperCase());
+  if (typeof body.scanId === "string") await markUnlocked(body.scanId, code.toUpperCase(), record.profile.id);
 
   return Response.json(
     buildPayload(record.profile, record.fields, record.contacts, "gated", orgName),

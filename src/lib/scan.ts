@@ -37,11 +37,20 @@ export async function recordScan(
   return data;
 }
 
-/** Marks an existing scan as having reached the gated tier. */
-export async function markUnlocked(scanId: string, code: string): Promise<void> {
+/**
+ * Marks an existing scan as having reached the gated tier. Scoped to the
+ * profile the code just unlocked: a caller-supplied scan id must not be able
+ * to stamp an unrelated profile's log.
+ */
+export async function markUnlocked(
+  scanId: string,
+  code: string,
+  profileId: string,
+): Promise<void> {
   const { error } = await serviceClient()
     .from("scans")
     .update({ tier: "gated", responder_code: code })
-    .eq("id", scanId);
+    .eq("id", scanId)
+    .eq("profile_id", profileId);
   if (error) console.error("[resq] scan unlock update failed:", error);
 }

@@ -44,6 +44,30 @@ export async function bridgeTo(digits: string): Promise<Response> {
   return xml(response.toString());
 }
 
+/**
+ * Twilio webhooks are public URLs, so the signature is the only thing
+ * standing between a stranger and a contact's real number: an unsigned
+ * request could enumerate all 10,000 dial codes and read each bridged
+ * number straight out of the TwiML. Fails closed — no token, no calls.
+ */
+export function validSignature(request: Request, form: FormData): boolean {
+  const token = process.env.TWILIO_AUTH_TOKEN;
+  const signature = request.headers.get("x-twilio-signature");
+  if (!token || !signature) return false;
+
+  const params: Record<string, string> = {};
+  for (const [key, value] of form) params[key] = String(value);
+  return twilio.validateRequest(token, signature, publicUrl(request), params);
+}
+
+/** Twilio signs the URL it dialed, which is the proxy's, not the lambda's. */
+function publicUrl(request: Request): string {
+  const url = new URL(request.url);
+  const host = request.headers.get("x-forwarded-host") ?? request.headers.get("host");
+  const proto = request.headers.get("x-forwarded-proto") ?? url.protocol.replace(":", "");
+  return host ? `${proto}://${host}${url.pathname}${url.search}` : url.toString();
+}
+
 export function digitsFrom(form: FormData): string | null {
   const digits = String(form.get("Digits") ?? "").replace(/\D/g, "");
   return /^\d{4}$/.test(digits) ? digits : null;
