@@ -29,7 +29,7 @@ export default function Home() {
             </h1>
             <p>
               A QR code for your keychain, phone case, or wallet card. Scanning it shows your
-              allergies, conditions, and emergency contacts &mdash; tiered by who&rsquo;s looking,
+              allergies, conditions, and emergency contacts, tiered by who&rsquo;s looking,
               fully controlled by you.
             </p>
             <div className="rq-hero-actions">
@@ -60,7 +60,7 @@ export default function Home() {
               <h3>Family is notified on scan</h3>
               <p>
                 The moment your code is scanned, the contacts you&rsquo;ve chosen get an SMS with
-                a map link &mdash; a static card that acts like a system.
+                a map link: a static card that acts like a system.
               </p>
             </div>
             <div className="rq-card rq-feature-card">
@@ -70,7 +70,7 @@ export default function Home() {
               <h3>Every scan is logged</h3>
               <p>
                 Timestamp, approximate location, and whether a responder unlocked the full
-                record &mdash; visible to you in the dashboard, always.
+                record: visible to you in the dashboard, always.
               </p>
             </div>
           </div>
