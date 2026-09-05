@@ -21,6 +21,8 @@ ResQ is a QR code on your keychain, phone case, or wallet card. Scanning it open
 | Field ordering | App-enforced by category | A medic scanning a stranger needs blood type in the same place every time. Users control content and visibility; the app controls rank. |
 | On scan | Notify contacts + log the scan | Notification turns a static page into a system. The log is the answer to "what stops someone scanning a stranger's bag?" |
 | Responder identity | Seeded codes, not self-serve | Real responder verification is out of scope for a hackathon. |
+| Emergency calls | Masked for public tier, direct for responders | A stranger who scans should be able to call without walking away with a permanent record of the contact's personal number. A verified responder gets the raw line, because the authenticated path should have zero failure modes. |
+| Profiles per account | One account owns many profiles | Parents manage their children's profiles. Costs no schema change and unlocks the school distribution story. |
 
 ## Architecture
 
@@ -42,13 +44,18 @@ Vercel gives a public HTTPS URL, which is a hard requirement — a QR pointing a
 ```
 profiles      id, user_id, slug, display_name, photo_url, created_at
 fields        id, profile_id, key, label, value, tier, category, rank
-contacts      id, profile_id, name, relationship, phone, tier, notify, rank
+contacts      id, profile_id, name, relationship, phone, tier, notify, rank,
+              dial_code
 scans         id, profile_id, scanned_at, tier, ip_city, lat, lng,
               responder_code, user_agent
 responders    code, org_name, active
 ```
 
 `tier` is an enum: `public` | `gated`.
+
+`contacts.dial_code` is a 4-digit code, unique within a profile, used to route masked calls (see below).
+
+**One account owns many profiles.** `profiles.user_id` is not unique, so a parent creating a child's profile requires no schema change — only a profile switcher in the dashboard. Guardian *invites* (granting a second adult access to an existing profile) would require a join table and are out of scope.
 
 **`fields` is row-per-fact, not a JSON blob.** Custom fields mean the schema cannot be columns. Rows carry `tier` and `category` per fact, which is what the responder view needs to group and rank.
 
@@ -69,6 +76,27 @@ phone scans QR → GET /r/[slug]
 ```
 
 Notification fires on the **public** scan, not the gated one. A bystander scanning at a crash scene is exactly when family most needs to know; waiting for a verified paramedic defeats the purpose.
+
+### Notification content
+
+The SMS must be actionable on its own. A message saying only "someone scanned Jacob's code" tells a family member nothing they can act on.
+
+```
+ResQ alert: Jacob's emergency code was just scanned near
+1400 W Monroe St, Chicago IL (3:14 PM).
+Map: https://resq.app/s/9fk2m
+```
+
+Location comes from browser geolocation when granted, IP-derived city otherwise. When neither is available, the message says "location unavailable" rather than omitting the line — an absent line reads as an app bug.
+
+### Masked calling
+
+Public-tier scanners must be able to reach a contact without learning their number. Anyone can photograph a QR code on a bag; raw `tel:` links would hand out family phone numbers permanently, recorded in the scanner's call history.
+
+- **Public tier:** the call button dials a single shared Twilio number with post-dial DTMF digits identifying the contact — `tel:+1XXXXXXXXXX,,,4471#`. Twilio answers, matches the code to `contacts.dial_code`, and bridges to the real number. The scanner never sees it.
+- **Gated tier:** verified responders get direct `tel:` links. They have authenticated, they are accountable via the scan log, and the authenticated path should carry no extra failure modes.
+
+Post-dial digits are unreliable on some Android builds, so the IVR falls back to a spoken prompt — "enter the four-digit code shown on the screen" — and the code is always printed next to the call button for exactly this case.
 
 ## Surfaces
 
@@ -120,10 +148,11 @@ Everything: DOB, address, full medication list, insurance, physician, DNR/advanc
 
 ### 4. Owner dashboard — `/dashboard`
 
+- **Profile switcher.** One account holds many profiles; a parent manages their own alongside each child's. New profiles start from the same editor.
 - Field editor grouped by category; every row has a public/gated toggle.
 - Contact list; each contact has its own tier toggle and a notify switch. A user may want the call button public while every medical detail stays gated.
 - Live preview of the public page beside the editor, so the effect of each toggle is visible as it is flipped.
-- QR download: PNG for stickers, PDF for a wallet card.
+- QR download in three layouts: PNG for stickers, PDF for a wallet card, and a **student ID badge layout** sized to overprint on an existing school ID.
 
 **Hide-everything warning.** When a user hides all life-critical fields, show an inline note: *"A bystander who scans this will see nothing. In most emergencies the first person on scene isn't a paramedic."* It warns; it does not block. Their data, their risk tolerance.
 
@@ -161,17 +190,25 @@ Each step is demoable on its own, so the build is never stranded mid-refactor.
 3. QR generation and print view. Now scannable from a phone.
 4. Owner auth, field editor, live preview.
 5. Responder unlock and gated view.
-6. Twilio notification on scan.
+6. Twilio notification on scan, including location in the message body.
 7. Scan log.
+8. Masked calling via Twilio IVR.
+9. Profile switcher and ID badge print layout.
 
-Steps 1–5 constitute a complete demo. Steps 6 and 7 are what make it land.
+Steps 1–5 constitute a complete demo. Steps 6 and 7 are what make it land. Steps 8 and 9 are the privacy and distribution stories; cut them first if time runs short, and demo raw `tel:` links instead.
+
+## Distribution
+
+The adoption story is that ResQ requires no new hardware. Schools already print student ID badges; adding a QR square to an existing badge template is a design change, not a procurement cycle. A district can pilot ResQ by reprinting badges it was going to print anyway.
+
+This makes guardian-managed profiles load-bearing rather than optional: the people configuring a student's medical data are their parents, not the student. The badge layout in the dashboard exists to serve this path.
 
 ## Out of scope
 
 - Real first responder verification (seeded codes only)
 - HIPAA compliance; encryption beyond Supabase defaults
 - Offline scanning
-- Multi-profile accounts for children or dependents
+- Guardian *invites* — sharing an existing profile with a second adult account
 - Internationalization, though a spoken-language field is included because it matters at a real scene
 - Native apps — web only; the phone's camera app handles scanning
 
@@ -182,5 +219,6 @@ Preparation:
 - Build a "simulate scan" button. Conference wifi fails; the demo needs a path that does not depend on a phone camera reaching the network.
 - Print the QR on paper and keep it on a second screen.
 - Seed two profiles: one with a rich public tier, one locked down, to demo both states back to back.
+- If masked calling ships, verify the Twilio IVR from at least one iPhone and one Android — post-dial DTMF behaviour differs between them.
 
 The three-minute story: print a QR, stick it on a phone case, hand it to a judge. They scan it with their own camera. Allergies appear. The presenter's phone buzzes on stage. Then show the locked-down profile that reveals nothing, and the scan log listing the judge's own scan.
