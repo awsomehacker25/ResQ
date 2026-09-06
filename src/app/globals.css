@@ -655,12 +655,12 @@ img {
   text-transform: uppercase;
   color: var(--faint);
   font-weight: 700;
-  padding: 0 8px 6px;
+  padding: 0 20px 8px 0;
   border-bottom: 1px solid var(--border);
 }
 
 .rq-table td {
-  padding: 8px;
+  padding: 10px 20px 10px 0;
   border-bottom: 1px solid var(--border);
 }
 

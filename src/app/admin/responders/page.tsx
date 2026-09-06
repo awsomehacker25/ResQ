@@ -18,6 +18,39 @@ type Org = {
   code: string | null;
 };
 
+function CodeActions({ code, org }: { code: string; org: Org }) {
+  const [copied, setCopied] = useState(false);
+
+  async function copy() {
+    try {
+      await navigator.clipboard.writeText(code);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1800);
+    } catch {
+      // clipboard permission denied, nothing to fall back to
+    }
+  }
+
+  const subject = encodeURIComponent("Your ResQ responder code");
+  const body = encodeURIComponent(
+    `Hi${org.contact_name ? ` ${org.contact_name}` : ""},\n\n` +
+      `${org.org_name} is approved for ResQ responder access. Your code is:\n\n${code}\n\n` +
+      `Enter it at the "I'm a first responder" prompt on any ResQ profile to unlock the full record.`,
+  );
+  const mailto = `mailto:${org.contact_email}?subject=${subject}&body=${body}`;
+
+  return (
+    <div style={{ display: "flex", gap: 8 }}>
+      <button className="rq-btn rq-btn-ghost rq-btn-sm" style={{ width: 68 }} onClick={copy}>
+        {copied ? "Copied" : "Copy"}
+      </button>
+      <a className="rq-btn rq-btn-ghost rq-btn-sm" style={{ width: 68 }} href={mailto}>
+        Email
+      </a>
+    </div>
+  );
+}
+
 export default function AdminRespondersPage() {
   const [ready, setReady] = useState(false);
   const [token, setToken] = useState<string | null>(null);
@@ -146,6 +179,7 @@ export default function AdminRespondersPage() {
                     <th>Type</th>
                     <th>Contact</th>
                     <th>Status</th>
+                    <th>Code</th>
                     <th>Actions</th>
                   </tr>
                 </thead>
@@ -162,6 +196,9 @@ export default function AdminRespondersPage() {
                         <span className={`rq-badge${org.status === "rejected" ? " rq-badge-critical" : ""}`}>
                           {org.status}
                         </span>
+                      </td>
+                      <td>
+                        <span className="rq-hint">{org.code ?? "-"}</span>
                       </td>
                       <td>
                         {org.status === "pending" ? (
@@ -182,7 +219,7 @@ export default function AdminRespondersPage() {
                             </button>
                           </div>
                         ) : org.status === "approved" && org.code ? (
-                          <span className="rq-hint">Code: {org.code}</span>
+                          <CodeActions code={org.code} org={org} />
                         ) : (
                           <span className="rq-hint">-</span>
                         )}
