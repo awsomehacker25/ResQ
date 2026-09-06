@@ -14,7 +14,6 @@ type Org = {
   contact_email: string;
   phone: string | null;
   status: "pending" | "approved" | "rejected";
-  email_verified_at: string | null;
   created_at: string;
   code: string | null;
 };
@@ -144,7 +143,6 @@ export default function AdminRespondersPage() {
                     <th>Org</th>
                     <th>Type</th>
                     <th>Contact</th>
-                    <th>Email verified</th>
                     <th>Status</th>
                     <th>Actions</th>
                   </tr>
@@ -158,7 +156,6 @@ export default function AdminRespondersPage() {
                         {org.contact_name ? `${org.contact_name} - ` : ""}
                         {org.contact_email}
                       </td>
-                      <td>{org.email_verified_at ? "Yes" : "No"}</td>
                       <td>
                         <span
                           className={`rq-badge ${
@@ -177,7 +174,7 @@ export default function AdminRespondersPage() {
                           <div style={{ display: "flex", gap: 8 }}>
                             <button
                               className="rq-btn rq-btn-primary rq-btn-sm"
-                              disabled={!org.email_verified_at || busyId === org.id}
+                              disabled={busyId === org.id}
                               onClick={() => approve(org.id)}
                             >
                               Approve

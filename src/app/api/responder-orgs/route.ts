@@ -1,8 +1,12 @@
 import { jsonBody } from "@/lib/owner";
 import { requireAdmin, FORBIDDEN } from "@/lib/admin";
-import { applyForOrg, listOrgs, sendOrgVerificationEmail, type OrgStatus } from "@/lib/responderOrgs";
+import { applyForOrg, listOrgs, type OrgStatus } from "@/lib/responderOrgs";
 
-/** Public application intake. No auth: anyone can apply, nothing is granted yet. */
+/**
+ * Public application intake. No auth: anyone can apply, nothing is granted
+ * yet. Email ownership is proven client-side right after this via Google
+ * sign-in, not an emailed link, so nothing here sends mail.
+ */
 export async function POST(request: Request) {
   const body = await jsonBody(request);
   const result = await applyForOrg({
@@ -14,7 +18,6 @@ export async function POST(request: Request) {
   });
   if ("error" in result) return Response.json({ error: result.error }, { status: 400 });
 
-  await sendOrgVerificationEmail(result.id, result.contact_email);
   return Response.json({ id: result.id, status: result.status }, { status: 201 });
 }
 

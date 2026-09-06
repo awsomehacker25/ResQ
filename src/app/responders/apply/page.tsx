@@ -46,8 +46,7 @@ export default function ApplyPage() {
           </h1>
           <p style={{ color: "var(--muted)", fontSize: 14, textAlign: "center", margin: "0 0 26px" }}>
             First responder orgs can apply for a code that unlocks the full record on a scan.
-            We&rsquo;ll email you to confirm the address, then review the application by hand
-            before issuing a code.
+            We review every application by hand before issuing a code.
           </p>
 
           {status === "sent" ? (
@@ -63,7 +62,7 @@ export default function ApplyPage() {
                 textAlign: "center",
               }}
             >
-              Check {contactEmail} for a confirmation link, then watch for approval.
+              Application submitted. We&rsquo;ll be in touch at {contactEmail}.
             </p>
           ) : (
             <form onSubmit={submit} style={{ display: "flex", flexDirection: "column", gap: 12 }}>

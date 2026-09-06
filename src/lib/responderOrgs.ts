@@ -1,4 +1,3 @@
-import { createClient } from "@supabase/supabase-js";
 import { serviceClient } from "./supabase";
 
 export type OrgStatus = "pending" | "approved" | "rejected";
@@ -11,7 +10,6 @@ export type ResponderOrg = {
   contact_email: string;
   phone: string | null;
   status: OrgStatus;
-  email_verified_at: string | null;
   created_at: string;
   approved_at: string | null;
 };
@@ -52,41 +50,6 @@ export async function applyForOrg(input: ApplyInput): Promise<ResponderOrg | { e
     return { error: error.message };
   }
   return data;
-}
-
-/**
- * Sends the same magic-link email the owner dashboard uses. Proves the
- * applicant controls the inbox; approval is still a separate, human step.
- */
-export async function sendOrgVerificationEmail(orgId: string, email: string): Promise<void> {
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-  if (!url || !anonKey) return;
-  const base = process.env.NEXT_PUBLIC_BASE_URL ?? "http://localhost:3000";
-  const auth = createClient(url, anonKey, { auth: { persistSession: false } });
-  await auth.auth.signInWithOtp({
-    email,
-    options: { emailRedirectTo: `${base}/responders/apply/verify?orgId=${orgId}` },
-  });
-}
-
-/** Confirms the authenticated email matches the org's contact email on file. */
-export async function verifyOrgEmail(orgId: string, authedEmail: string): Promise<ResponderOrg | null> {
-  const db = serviceClient();
-  const { data: org } = await db
-    .from("responder_orgs")
-    .select("*")
-    .eq("id", orgId)
-    .maybeSingle<ResponderOrg>();
-  if (!org || org.contact_email !== authedEmail.trim().toLowerCase()) return null;
-
-  const { data } = await db
-    .from("responder_orgs")
-    .update({ email_verified_at: org.email_verified_at ?? new Date().toISOString() })
-    .eq("id", orgId)
-    .select()
-    .single<ResponderOrg>();
-  return data ?? null;
 }
 
 export type ResponderOrgWithCode = ResponderOrg & { code: string | null };
@@ -130,7 +93,7 @@ async function allocateResponderCode(orgName: string): Promise<string> {
   throw new Error("Could not allocate a responder code");
 }
 
-/** Approves a pending, email-verified org and issues its first working code. */
+/** Approves a pending org and issues its first working code. */
 export async function approveOrg(orgId: string): Promise<{ code: string } | { error: string }> {
   const db = serviceClient();
   const { data: org } = await db
@@ -139,7 +102,6 @@ export async function approveOrg(orgId: string): Promise<{ code: string } | { er
     .eq("id", orgId)
     .maybeSingle<ResponderOrg>();
   if (!org) return { error: "Not found" };
-  if (!org.email_verified_at) return { error: "Email not yet verified" };
 
   const code = await allocateResponderCode(org.org_name);
   const { error: insertError } = await db
