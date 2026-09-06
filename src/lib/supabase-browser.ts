@@ -8,7 +8,7 @@ export function isSupabaseConfigured(): boolean {
   );
 }
 
-/** Browser-side Supabase client for the owner's magic-link session. */
+/** Browser-side Supabase client for the owner's session. */
 export function browserClient(): SupabaseClient {
   if (client) return client;
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
