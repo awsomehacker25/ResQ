@@ -3,9 +3,36 @@
   --muted: #555;
   --faint: #888;
   --border: #ccc;
+  --bg: #fff;
   --brand: #2454ff;
   --red: #c00;
   --green: #157a3d;
+}
+
+/* Dark values apply when the OS prefers dark (and the toggle hasn't
+   overridden it), or when the toggle explicitly picked dark. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --ink: #f2f2f2;
+    --muted: #a3a3a3;
+    --faint: #888;
+    --border: #333;
+    --bg: #111;
+    --brand: #5b8dff;
+    --red: #ff6b6b;
+    --green: #4ade80;
+  }
+}
+
+:root[data-theme="dark"] {
+  --ink: #f2f2f2;
+  --muted: #a3a3a3;
+  --faint: #888;
+  --border: #333;
+  --bg: #111;
+  --brand: #5b8dff;
+  --red: #ff6b6b;
+  --green: #4ade80;
 }
 
 * {
@@ -19,7 +46,7 @@ body {
 }
 
 body {
-  background: #fff;
+  background: var(--bg);
   color: var(--ink);
   font-family: var(--font-serif), Georgia, serif;
   font-size: 15px;
@@ -45,6 +72,7 @@ a {
 
 button {
   font-family: inherit;
+  color: inherit;
 }
 
 img {
@@ -106,7 +134,7 @@ img {
 }
 
 .rq-card {
-  background: #fff;
+  background: var(--bg);
   border: 1px solid var(--border);
 }
 
@@ -121,7 +149,7 @@ img {
   border: 1px solid var(--ink);
   cursor: pointer;
   text-decoration: none;
-  background: #fff;
+  background: var(--bg);
   color: var(--ink);
 }
 
@@ -138,7 +166,7 @@ img {
 
 .rq-btn-dark {
   background: var(--ink);
-  color: white;
+  color: var(--bg);
 }
 
 .rq-btn-ghost {
@@ -179,7 +207,7 @@ img {
   font-size: 15px;
   padding: 8px 10px;
   border: 1px solid var(--border);
-  background: white;
+  background: var(--bg);
   color: var(--ink);
   font-family: inherit;
   width: 100%;
@@ -226,7 +254,7 @@ img {
 }
 
 .rq-profile-card {
-  background: #fff;
+  background: var(--bg);
   border: 1px solid var(--border);
 }
 
@@ -241,7 +269,7 @@ img {
   width: 54px;
   height: 54px;
   object-fit: cover;
-  background: #eee;
+  background: var(--border);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -266,7 +294,7 @@ img {
 
 .rq-unlocked-strip {
   background: var(--ink);
-  color: white;
+  color: var(--bg);
   font-size: 12.5px;
   font-weight: 700;
   text-transform: uppercase;
@@ -366,7 +394,7 @@ img {
   width: 100%;
   padding: 12px 14px;
   background: var(--ink);
-  color: white;
+  color: var(--bg);
   font-weight: 700;
   font-size: 14.5px;
   text-decoration: none;
@@ -386,7 +414,7 @@ img {
 .rq-empty-shield {
   width: 50px;
   height: 50px;
-  background: #f2f2f2;
+  background: var(--border);
   color: var(--brand);
   display: flex;
   align-items: center;
@@ -542,7 +570,7 @@ img {
 .rq-avatar-sm {
   width: 26px;
   height: 26px;
-  background: #eee;
+  background: var(--border);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -684,7 +712,7 @@ img {
 
 .rq-tab[data-active="true"] {
   background: var(--ink);
-  color: white;
+  color: var(--bg);
 }
 
 .rq-qr-box {

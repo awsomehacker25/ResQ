@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ShieldIcon } from "@/components/icons";
 import { ProfileCard } from "@/components/ProfileCard";
+import { ThemeToggle } from "@/components/ThemeToggle";
 import { buildPayload, loadBySlug } from "@/lib/profile";
 
 const DEMO_SLUG = "jk4m2xq9";
@@ -34,9 +35,12 @@ export default async function Home() {
             </span>
             ResQ
           </Link>
-          <Link href="/dashboard" className="rq-btn rq-btn-dark rq-btn-sm">
-            Dashboard
-          </Link>
+          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+            <ThemeToggle />
+            <Link href="/dashboard" className="rq-btn rq-btn-dark rq-btn-sm">
+              Dashboard
+            </Link>
+          </div>
         </div>
       </header>
 

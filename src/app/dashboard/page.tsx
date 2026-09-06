@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import { browserClient, isSupabaseConfigured } from "@/lib/supabase-browser";
 import { ShieldIcon } from "@/components/icons";
+import { ThemeToggle } from "@/components/ThemeToggle";
 import type { Contact, Field, Profile, Tier } from "@/lib/types";
 import { buildPayload } from "@/lib/profile";
 import { ProfileCard } from "@/components/ProfileCard";
@@ -726,6 +727,7 @@ export default function DashboardPage() {
             ResQ
           </Link>
           <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+            <ThemeToggle />
             {isAdmin && (
               <Link href="/admin/responders" className="rq-btn rq-btn-ghost rq-btn-sm">
                 Responder review

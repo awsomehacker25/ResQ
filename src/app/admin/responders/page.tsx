@@ -5,6 +5,7 @@ import Link from "next/link";
 import { browserClient, isSupabaseConfigured } from "@/lib/supabase-browser";
 import { Login } from "@/app/dashboard/Login";
 import { ShieldIcon } from "@/components/icons";
+import { ThemeToggle } from "@/components/ThemeToggle";
 
 type Org = {
   id: string;
@@ -156,9 +157,12 @@ export default function AdminRespondersPage() {
             </span>
             Responder org review
           </span>
-          <Link href="/dashboard" className="rq-btn rq-btn-ghost rq-btn-sm">
-            ← Dashboard
-          </Link>
+          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+            <ThemeToggle />
+            <Link href="/dashboard" className="rq-btn rq-btn-ghost rq-btn-sm">
+              ← Dashboard
+            </Link>
+          </div>
         </div>
       </header>
 
