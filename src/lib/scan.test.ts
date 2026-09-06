@@ -8,7 +8,7 @@ vi.mock("./supabase", () => ({ serviceClient: () => ({ from }) }));
 const create = vi.fn(async (_opts: { to: string; from: string; body: string }) => ({ sid: "SM1" }));
 vi.mock("twilio", () => ({ default: () => ({ messages: { create } }) }));
 
-const { recordScan, buildAlert, sendAlerts } = await import("./scan");
+const { recordScan, sendAlerts, ALERT_BODY } = await import("./scan");
 
 const profile: Profile = {
   id: "p1",
@@ -79,7 +79,7 @@ describe("recordScan", () => {
       { lat: null, lng: null },
     );
     expect(create).toHaveBeenCalledTimes(1);
-    expect(create.mock.calls[0][0]).toMatchObject({ to: "+13125550101" });
+    expect(create.mock.calls[0][0]).toMatchObject({ to: "+13125550101", body: ALERT_BODY });
   });
 
   it("still returns the scan when the insert fails, so the read is never blocked", async () => {
@@ -93,22 +93,6 @@ describe("recordScan", () => {
 });
 
 describe("alerts", () => {
-  it("names the person, the place, and a map link", () => {
-    const body = buildAlert(
-      "Jacob",
-      { city: "Chicago, IL", lat: null, lng: null },
-      "9fk2m",
-      new Date("2026-09-05T20:14:00Z"),
-    );
-    expect(body).toContain("Jacob's emergency code was just scanned near Chicago, IL");
-    expect(body).toContain("/s/9fk2m");
-  });
-
-  it("says location unavailable rather than dropping the line", () => {
-    const body = buildAlert("Jacob", { city: null, lat: null, lng: null }, "9fk2m");
-    expect(body).toContain("at an unavailable location");
-  });
-
   it("survives a Twilio outage without throwing", async () => {
     create.mockRejectedValue(new Error("twilio down"));
     vi.spyOn(console, "error").mockImplementation(() => {});

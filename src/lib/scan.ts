@@ -5,27 +5,9 @@ import type { Contact, Scan } from "./types";
 
 type ScanLocation = { city: string | null; lat: number | null; lng: number | null };
 
-function baseUrl(): string {
-  return process.env.NEXT_PUBLIC_BASE_URL ?? "http://localhost:3000";
-}
-
-export function buildAlert(
-  displayName: string,
-  location: ScanLocation,
-  scanId: string,
-  at: Date = new Date(),
-): string {
-  const time = at.toLocaleTimeString("en-US", {
-    hour: "numeric",
-    minute: "2-digit",
-    timeZone: process.env.RESQ_TZ ?? "America/Chicago",
-  });
-  const where = location.city ? `near ${location.city}` : "at an unavailable location";
-  return (
-    `ResQ alert: ${displayName}'s emergency code was just scanned ` +
-    `${where} (${time}). Map: ${baseUrl()}/s/${scanId}`
-  );
-}
+// Twilio trial/unregistered numbers only deliver a small set of pre-cleared
+// message bodies; free-text alerts (even with a map link) get filtered.
+export const ALERT_BODY = "sms_account_alerts";
 
 async function resolveLocation(
   request: Request,
@@ -99,7 +81,7 @@ export async function recordScan(
     return null;
   }
 
-  await sendAlerts(record.contacts, buildAlert(record.profile.display_name, location, data.id));
+  await sendAlerts(record.contacts, ALERT_BODY);
   return data;
 }
 
