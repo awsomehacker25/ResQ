@@ -99,9 +99,70 @@ function ContactRow({
   onUpdate: (patch: Partial<Contact>) => Promise<void>;
   onDelete: () => void;
 }) {
+  const [editing, setEditing] = useState(false);
+  const [name, setName] = useState(contact.name);
+  const [relationship, setRelationship] = useState(contact.relationship ?? "");
+  const [phone, setPhone] = useState(contact.phone);
+  const [error, setError] = useState("");
+  const [busy, setBusy] = useState(false);
+
+  async function save() {
+    if (!name.trim() || !PHONE_RE.test(phone.trim())) {
+      setError("Enter a name and a phone number in E.164 format, e.g. +13125550101");
+      return;
+    }
+    setError("");
+    setBusy(true);
+    try {
+      await onUpdate({
+        name: name.trim(),
+        relationship: relationship.trim() || null,
+        phone: phone.trim(),
+      });
+      setEditing(false);
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  if (editing) {
+    return (
+      <div className="rq-row" style={{ flexDirection: "column", alignItems: "stretch", gap: 8 }}>
+        <div className="rq-form-grid">
+          <input className="rq-input" value={name} onChange={(e) => setName(e.target.value)} placeholder="Name" />
+          <input
+            className="rq-input"
+            value={relationship}
+            onChange={(e) => setRelationship(e.target.value)}
+            placeholder="Relationship (wife, dad...)"
+          />
+        </div>
+        <input className="rq-input" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="+13125550101" />
+        {error && <p className="rq-error-text">{error}</p>}
+        <div style={{ display: "flex", gap: 8, justifyContent: "flex-end" }}>
+          <button
+            className="rq-btn rq-btn-ghost rq-btn-sm"
+            onClick={() => {
+              setName(contact.name);
+              setRelationship(contact.relationship ?? "");
+              setPhone(contact.phone);
+              setError("");
+              setEditing(false);
+            }}
+          >
+            Cancel
+          </button>
+          <button className="rq-btn rq-btn-primary rq-btn-sm" onClick={save} disabled={busy}>
+            {busy ? <span className="rq-spinner" /> : "Save"}
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="rq-row">
-      <div className="rq-row-main">
+      <div className="rq-row-main" onClick={() => setEditing(true)} style={{ cursor: "text" }}>
         <p className="rq-row-title">
           {contact.name}
           {contact.relationship ? ` · ${contact.relationship}` : ""}
