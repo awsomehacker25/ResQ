@@ -6,10 +6,6 @@ function coord(value: unknown): number | null {
   return typeof value === "number" && Number.isFinite(value) ? value : null;
 }
 
-/**
- * The scan path. Renders the public tier, records the scan, notifies
- * contacts. Notification and logging failures never block the payload.
- */
 export async function POST(request: Request) {
   const body = await jsonBody(request);
   const slug = typeof body.slug === "string" ? body.slug : "";

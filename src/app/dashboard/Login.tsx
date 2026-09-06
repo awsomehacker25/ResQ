@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { browserClient, isSupabaseConfigured } from "@/lib/supabase-browser";
-import { EyeIcon, EyeOffIcon, GoogleIcon, ShieldIcon } from "@/components/icons";
 
 type Mode = "signin" | "signup" | "forgot";
 
@@ -22,8 +21,7 @@ export function Login() {
             <h1 style={{ fontSize: 19, margin: "0 0 8px" }}>Supabase isn&rsquo;t configured</h1>
             <p style={{ color: "var(--muted)", fontSize: 14, lineHeight: 1.5 }}>
               Set <code>NEXT_PUBLIC_SUPABASE_URL</code> and{" "}
-              <code>NEXT_PUBLIC_SUPABASE_ANON_KEY</code> in <code>.env.local</code>, see{" "}
-              <code>SETUP.md</code>.
+              <code>NEXT_PUBLIC_SUPABASE_ANON_KEY</code> in <code>.env.local</code>.
             </p>
           </div>
         </div>
@@ -97,9 +95,7 @@ export function Login() {
     <div className="rq-center-card">
       <div className="rq-container-narrow">
         <div className="rq-card" style={{ padding: 36 }}>
-          <div className="rq-empty-shield" style={{ margin: "0 auto 18px" }}>
-            <ShieldIcon size={24} />
-          </div>
+          <div className="rq-empty-shield" style={{ margin: "0 auto 18px" }} />
           <h1 style={{ fontSize: 21, textAlign: "center", margin: "0 0 6px" }}>{title}</h1>
           <p style={{ color: "var(--muted)", fontSize: 14, textAlign: "center", margin: "0 0 26px" }}>
             {subtitle}
@@ -108,10 +104,8 @@ export function Login() {
           {status === "checkEmail" ? (
             <p
               style={{
-                background: "var(--green-bg)",
-                border: "1px solid var(--green-border)",
+                border: "1px solid var(--green)",
                 color: "var(--green)",
-                borderRadius: "var(--radius-md)",
                 padding: "14px 16px",
                 fontSize: 14,
                 fontWeight: 600,
@@ -172,7 +166,7 @@ export function Login() {
                         color: "var(--faint)",
                       }}
                     >
-                      {showPassword ? <EyeOffIcon size={17} /> : <EyeIcon size={17} />}
+                      {showPassword ? "Hide" : "Show"}
                     </button>
                   </div>
                 </div>
@@ -194,7 +188,7 @@ export function Login() {
                 disabled={status === "busy"}
               >
                 {status === "busy" && <span className="rq-spinner" />}
-                {mode === "signin" ? "Sign in" : mode === "signup" ? "Create account" : "Send reset link"}
+                {mode === "signin" ? "Sign in" : mode === "signup" ? "Add" : "Send"}
               </button>
             </form>
           )}
@@ -220,9 +214,7 @@ export function Login() {
                 className="rq-btn rq-btn-ghost rq-btn-block"
                 onClick={withGoogle}
                 disabled={status === "busy"}
-                style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 10 }}
               >
-                <GoogleIcon size={17} />
                 Continue with Google
               </button>
             </>

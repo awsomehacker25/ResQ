@@ -8,8 +8,7 @@ vi.mock("./supabase", () => ({ serviceClient: () => ({ from }) }));
 const create = vi.fn(async (_opts: { to: string; from: string; body: string }) => ({ sid: "SM1" }));
 vi.mock("twilio", () => ({ default: () => ({ messages: { create } }) }));
 
-const { recordScan } = await import("./scan");
-const { buildAlert, sendAlerts } = await import("./notify");
+const { recordScan, buildAlert, sendAlerts } = await import("./scan");
 
 const profile: Profile = {
   id: "p1",

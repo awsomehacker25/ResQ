@@ -3,11 +3,7 @@ import { serviceClient } from "./supabase";
 
 const SLUG_ALPHABET = "abcdefghijklmnopqrstuvwxyz0123456789";
 
-/**
- * Random 8-character slug (~2.8e12 combinations), never sequential.
- * Sequential ids would let anyone enumerate every medical profile in the
- * database by counting.
- */
+// random, never sequential - sequential ids would let anyone enumerate every profile
 export function generateSlug(): string {
   const bytes = crypto.getRandomValues(new Uint8Array(8));
   return Array.from(bytes, (b) => SLUG_ALPHABET[b % SLUG_ALPHABET.length]).join("");
@@ -19,13 +15,9 @@ export type PublicContact = {
   name: string;
   relationship: string | null;
   dialCode: string;
-  /** Present only on the gated tier. */
   phone?: string;
-  /** tel: href, masked for public scanners, direct for responders. */
   tel: string;
-  /** True only when tel actually routes through the IVR, so the dial-code
-   *  hint is never shown next to a direct-dial link. */
-  masked: boolean;
+  masked: boolean; // false only when tel routes direct, not through the IVR
 };
 
 export type ProfilePayload = {
@@ -35,21 +27,15 @@ export type ProfilePayload = {
   tier: Tier;
   fields: PublicField[];
   contacts: PublicContact[];
-  /** True when the requested tier hid something; drives the empty-tier frame. */
   hasHiddenContent: boolean;
-  /** Department that unlocked the record; gated tier only. */
   unlockedBy?: string;
 };
 
-/** A field or contact is visible when it is public, or when the viewer is gated. */
 function visible(rowTier: Tier, viewerTier: Tier): boolean {
   return rowTier === "public" || viewerTier === "gated";
 }
 
-/**
- * Server-side tier filtering. A gated row must never reach the response
- * payload; hiding it with CSS would ship it in the HTML.
- */
+// filtering happens server-side: a gated row must never reach the response payload
 export function filterFields(fields: Field[], viewerTier: Tier): PublicField[] {
   return fields
     .filter((f) => visible(f.tier, viewerTier))
@@ -107,8 +93,6 @@ export function buildPayload(
 
 export type ProfileRecord = { profile: Profile; fields: Field[]; contacts: Contact[] };
 
-/** Returns null for an unknown slug; never distinguishes "never existed"
- *  from "deleted". */
 export async function loadBySlug(slug: string): Promise<ProfileRecord | null> {
   const db = serviceClient();
   const { data: profile } = await db

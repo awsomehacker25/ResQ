@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { buildPayload, loadBySlug } from "@/lib/profile";
 import { ProfileCard } from "@/components/ProfileCard";
-import { ShieldIcon } from "@/components/icons";
 import { ScanLogger } from "./ScanLogger";
 
 export const metadata: Metadata = { title: "ResQ: Emergency profile" };
@@ -19,9 +18,7 @@ export default async function PublicProfilePage({
       <div className="rq-center-card">
         <div className="rq-container-narrow">
           <div className="rq-card" style={{ padding: 36, textAlign: "center" }}>
-            <div className="rq-empty-shield" style={{ margin: "0 auto 16px" }}>
-              <ShieldIcon />
-            </div>
+            <div className="rq-empty-shield" style={{ margin: "0 auto 16px" }} />
             <h1 style={{ fontSize: 19, margin: "0 0 8px" }}>No profile found</h1>
             <p style={{ color: "var(--muted)", fontSize: 14.5, margin: "0 0 22px" }}>
               This ResQ code isn&rsquo;t linked to a profile. It may have been removed.

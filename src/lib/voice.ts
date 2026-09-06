@@ -11,7 +11,6 @@ export function xml(body: string): Response {
   return new Response(body, { headers: { "content-type": "text/xml" } });
 }
 
-/** Allocates a globally unique 4-digit dial code. */
 export async function allocateDialCode(): Promise<string> {
   const db = serviceClient();
   for (let attempt = 0; attempt < 20; attempt++) {
@@ -22,10 +21,6 @@ export async function allocateDialCode(): Promise<string> {
   throw new Error("Could not allocate a dial code");
 }
 
-/**
- * Looks the dial code up and bridges to the real number. The caller never
- * sees or hears it; that is the whole point of the masked path.
- */
 export async function bridgeTo(digits: string): Promise<Response> {
   const response = twiml();
   const { data } = await serviceClient()
@@ -44,12 +39,7 @@ export async function bridgeTo(digits: string): Promise<Response> {
   return xml(response.toString());
 }
 
-/**
- * Twilio webhooks are public URLs, so the signature is the only thing
- * standing between a stranger and a contact's real number: an unsigned
- * request could enumerate all 10,000 dial codes and read each bridged
- * number straight out of the TwiML. Fails closed: no token, no calls.
- */
+// signature is all that stops a stranger enumerating dial codes over this public webhook - fails closed
 export function validSignature(request: Request, form: FormData): boolean {
   const token = process.env.TWILIO_AUTH_TOKEN;
   const signature = request.headers.get("x-twilio-signature");
@@ -60,7 +50,7 @@ export function validSignature(request: Request, form: FormData): boolean {
   return twilio.validateRequest(token, signature, publicUrl(request), params);
 }
 
-/** Twilio signs the URL it dialed, which is the proxy's, not the lambda's. */
+// Twilio signs the URL it dialed, which is the proxy's, not the lambda's
 function publicUrl(request: Request): string {
   const url = new URL(request.url);
   const host = request.headers.get("x-forwarded-host") ?? request.headers.get("host");

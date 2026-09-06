@@ -1,10 +1,6 @@
 import { bearerToken, userClient } from "./supabase";
 
-/**
- * Single-admin allowlist via env var. Org approval unlocks the ability to
- * read someone's medical record, so this is intentionally not self-serve:
- * only the operator configured in RESQ_ADMIN_EMAIL can approve or reject.
- */
+// single-admin allowlist - only RESQ_ADMIN_EMAIL can approve orgs, deliberately not self-serve
 export async function requireAdmin(request: Request): Promise<boolean> {
   const adminEmail = process.env.RESQ_ADMIN_EMAIL?.trim().toLowerCase();
   if (!adminEmail) return false;

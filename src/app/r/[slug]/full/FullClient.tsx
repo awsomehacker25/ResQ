@@ -3,7 +3,6 @@
 import { useState } from "react";
 import type { ProfilePayload } from "@/lib/profile";
 import { ProfileCard } from "@/components/ProfileCard";
-import { LockIcon, ShieldIcon } from "@/components/icons";
 
 type State =
   | { step: "locked" }
@@ -55,9 +54,7 @@ export function FullClient({ slug }: { slug: string }) {
   return (
     <div className="rq-phone-frame">
       <div className="rq-card" style={{ padding: 32, textAlign: "center" }}>
-        <div className="rq-empty-shield" style={{ margin: "0 auto 18px" }}>
-          <LockIcon size={24} />
-        </div>
+        <div className="rq-empty-shield" style={{ margin: "0 auto 18px" }} />
         <h1 style={{ fontSize: 19, margin: "0 0 6px" }}>First responder unlock</h1>
         <p style={{ color: "var(--muted)", fontSize: 14, margin: "0 0 24px", lineHeight: 1.5 }}>
           Enter your department&rsquo;s access code to view the full record. This unlock is
@@ -79,8 +76,8 @@ export function FullClient({ slug }: { slug: string }) {
             className="rq-btn rq-btn-dark rq-btn-block"
             disabled={state.step === "checking" || !code.trim()}
           >
-            {state.step === "checking" ? <span className="rq-spinner" /> : <ShieldIcon size={16} />}
-            Unlock full record
+            {state.step === "checking" ? <span className="rq-spinner" /> : null}
+            Unlock
           </button>
         </form>
       </div>

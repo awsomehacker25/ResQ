@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { serviceClient } from "@/lib/supabase";
-import { ShieldIcon } from "@/components/icons";
 
 export const metadata: Metadata = { title: "ResQ: Scan alert" };
 
@@ -14,12 +13,7 @@ type ScanDetail = {
   profiles: { display_name: string; slug: string } | null;
 };
 
-/**
- * The destination of the map link in every alert SMS. Reached by a family
- * member who just got a text, so it answers who, when and where and nothing
- * else; the scan id is the only credential, and it must not become a way
- * to read someone's medical record.
- */
+// scan id is the only credential here, must not leak the medical record
 export default async function ScanAlertPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
 
@@ -38,9 +32,7 @@ export default async function ScanAlertPage({ params }: { params: Promise<{ id: 
       <div className="rq-center-card">
         <div className="rq-container-narrow">
           <div className="rq-card" style={{ padding: 36, textAlign: "center" }}>
-            <div className="rq-empty-shield" style={{ margin: "0 auto 16px" }}>
-              <ShieldIcon />
-            </div>
+            <div className="rq-empty-shield" style={{ margin: "0 auto 16px" }} />
             <h1 style={{ fontSize: 19, margin: "0 0 8px" }}>Alert not found</h1>
             <p style={{ color: "var(--muted)", fontSize: 14.5, margin: 0 }}>
               This alert link is no longer valid.
@@ -64,9 +56,7 @@ export default async function ScanAlertPage({ params }: { params: Promise<{ id: 
     <div className="rq-center-card">
       <div className="rq-container-narrow">
         <div className="rq-card" style={{ padding: 28 }}>
-          <div className="rq-hero-eyebrow" style={{ marginBottom: 14 }}>
-            <ShieldIcon size={14} /> ResQ alert
-          </div>
+          <p className="rq-hint" style={{ marginBottom: 14 }}>ResQ alert</p>
           <h1 style={{ fontSize: 20, margin: "0 0 6px" }}>
             {name}&rsquo;s emergency code was scanned
           </h1>
@@ -91,7 +81,7 @@ export default async function ScanAlertPage({ params }: { params: Promise<{ id: 
               <span className="rq-fact-label">Opened by</span>
               <span className="rq-fact-value">
                 <span
-                  className={`rq-badge ${data.tier === "gated" ? "rq-badge-critical" : "rq-badge-public"}`}
+                  className={`rq-badge${data.tier === "gated" ? " rq-badge-critical" : ""}`}
                 >
                   {data.tier === "gated"
                     ? `First responder${data.responder_code ? ` · ${data.responder_code}` : ""}`

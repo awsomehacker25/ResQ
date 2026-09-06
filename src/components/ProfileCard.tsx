@@ -1,5 +1,4 @@
 import type { ProfilePayload, PublicField } from "@/lib/profile";
-import { AlertIcon, ChevronRightIcon, PhoneIcon, ShieldIcon } from "./icons";
 
 const CATEGORY_LABEL: Record<string, string> = {
   medical: "Medical",
@@ -7,9 +6,7 @@ const CATEGORY_LABEL: Record<string, string> = {
   admin: "Administrative",
 };
 
-// These two identity facts double as the header subtitle, per the design
-// spec's mockup ("34 · O NEGATIVE"), omitted from the Identity list below
-// so they aren't shown twice.
+// age/blood type double as the header subtitle, so drop them from the Identity list
 const SUBTITLE_KEYS = ["age", "blood_type"];
 
 function initials(name: string): string {
@@ -47,17 +44,12 @@ export function ProfileCard({
   return (
     <div className="rq-profile-card">
       {payload.tier === "gated" && payload.unlockedBy && (
-        <div className="rq-unlocked-strip">
-          <ShieldIcon size={14} />
-          Unlocked by {payload.unlockedBy}
-        </div>
+        <div className="rq-unlocked-strip">Unlocked by {payload.unlockedBy}</div>
       )}
 
       {isEmpty ? (
         <div className="rq-empty-state">
-          <div className="rq-empty-shield">
-            <ShieldIcon />
-          </div>
+          <div className="rq-empty-shield" />
           <p className="rq-empty-title">{payload.displayName}</p>
           <p className="rq-empty-copy">
             This person has restricted their information to verified first responders.
@@ -72,7 +64,7 @@ export function ProfileCard({
                 <img
                   src={payload.photoUrl}
                   alt=""
-                  style={{ width: "100%", height: "100%", objectFit: "cover", borderRadius: 16 }}
+                  style={{ width: "100%", height: "100%", objectFit: "cover" }}
                 />
               ) : (
                 initials(payload.displayName)
@@ -90,13 +82,8 @@ export function ProfileCard({
             <div className="rq-alert-band">
               {critical.map((field) => (
                 <div className="rq-alert-row" key={field.key}>
-                  <span className="rq-alert-icon">
-                    <AlertIcon />
-                  </span>
-                  <div>
-                    <p className="rq-alert-label">{field.label}</p>
-                    <p className="rq-alert-value">{field.value}</p>
-                  </div>
+                  <p className="rq-alert-label">{field.label}</p>
+                  <p className="rq-alert-value">{field.value}</p>
                 </div>
               ))}
             </div>
@@ -128,7 +115,6 @@ export function ProfileCard({
                       className={`rq-call-btn${contact.phone ? " rq-call-direct" : ""}`}
                       href={contact.tel}
                     >
-                      <PhoneIcon size={17} />
                       Call {contact.name}
                       {contact.relationship && <small>&nbsp;({contact.relationship})</small>}
                     </a>
@@ -146,8 +132,7 @@ export function ProfileCard({
       {responderHref && (
         <div className="rq-responder-cta">
           <a className="rq-responder-link" href={responderHref}>
-            I&rsquo;m a first responder
-            <ChevronRightIcon size={15} />
+            I&rsquo;m a first responder ›
           </a>
         </div>
       )}

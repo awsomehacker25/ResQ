@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { browserClient } from "@/lib/supabase-browser";
-import { ShieldIcon } from "@/components/icons";
 
 type State = "checking" | "ready" | "invalid" | "done";
 
@@ -63,9 +62,7 @@ export default function ResetPasswordPage() {
     <div className="rq-center-card">
       <div className="rq-container-narrow">
         <div className="rq-card" style={{ padding: 36, textAlign: "center" }}>
-          <div className="rq-empty-shield" style={{ margin: "0 auto 18px" }}>
-            <ShieldIcon size={24} />
-          </div>
+          <div className="rq-empty-shield" style={{ margin: "0 auto 18px" }} />
 
           {state === "checking" && (
             <>
@@ -120,7 +117,7 @@ export default function ResetPasswordPage() {
                 {error && <p className="rq-error-text">{error}</p>}
                 <button type="submit" className="rq-btn rq-btn-primary rq-btn-block" disabled={busy}>
                   {busy && <span className="rq-spinner" />}
-                  Update password
+                  Save
                 </button>
               </form>
             </>

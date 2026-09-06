@@ -1,14 +1,8 @@
 import { bridgeTo, digitsFrom, twiml, validSignature, xml } from "@/lib/voice";
 
-/**
- * Masked-call entry point. Public-tier scanners dial one shared number with
- * post-dial DTMF digits (tel:+1XXXXXXXXXX,,,4471#), which arrive here as
- * Digits. Post-dial DTMF is unreliable on some Android builds, so a missing
- * code falls back to a spoken prompt.
- */
+// post-dial DTMF is flaky on some Android builds, so a missing code falls back to a spoken prompt
 export async function POST(request: Request) {
   const form = await request.formData();
-  // Unsigned callers get the same generic refusal, never an oracle.
   if (!validSignature(request, form)) return forbidden();
 
   const digits = digitsFrom(form);

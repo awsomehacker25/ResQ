@@ -1,6 +1,5 @@
 import { ownerDb, UNAUTHORIZED } from "@/lib/owner";
 
-/** The scan log: the trust surface, and the answer to the privacy objection. */
 export async function GET(request: Request, ctx: { params: Promise<{ id: string }> }) {
   const db = ownerDb(request);
   if (!db) return UNAUTHORIZED;

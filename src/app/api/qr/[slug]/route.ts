@@ -1,8 +1,7 @@
 import QRCode from "qrcode";
 import { loadBySlug } from "@/lib/profile";
 
-/** QR PNG for a profile. The payload is a URL, not embedded data, so
- *  editing a profile never invalidates a printed code. */
+// payload is a URL, not embedded data, so editing a profile never invalidates a printed code
 export async function GET(request: Request, ctx: { params: Promise<{ slug: string }> }) {
   const { slug } = await ctx.params;
   if (!(await loadBySlug(slug))) {

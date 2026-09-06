@@ -6,11 +6,7 @@ function required(name: string): string {
   return value;
 }
 
-/**
- * Service-role client. Every public and responder read goes through this:
- * anon has no RLS policy at all, so slugs cannot be enumerated from a
- * browser. Server-side only; never import from client code.
- */
+// server-only - bypasses RLS, never import from client code
 export function serviceClient(): SupabaseClient {
   return createClient(
     required("NEXT_PUBLIC_SUPABASE_URL"),
@@ -19,7 +15,6 @@ export function serviceClient(): SupabaseClient {
   );
 }
 
-/** Owner client: carries the caller's JWT so RLS scopes rows to them. */
 export function userClient(accessToken: string): SupabaseClient {
   return createClient(
     required("NEXT_PUBLIC_SUPABASE_URL"),

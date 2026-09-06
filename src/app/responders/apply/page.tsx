@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { ShieldIcon } from "@/components/icons";
 
 const ORG_TYPES = ["Fire", "EMS", "Police", "Hospital", "Other"];
 
@@ -38,9 +37,7 @@ export default function ApplyPage() {
     <div className="rq-center-card">
       <div className="rq-container-narrow">
         <div className="rq-card" style={{ padding: 36 }}>
-          <div className="rq-empty-shield" style={{ margin: "0 auto 18px" }}>
-            <ShieldIcon size={24} />
-          </div>
+          <div className="rq-empty-shield" style={{ margin: "0 auto 18px" }} />
           <h1 style={{ fontSize: 21, textAlign: "center", margin: "0 0 6px" }}>
             Register your organization
           </h1>
@@ -52,10 +49,8 @@ export default function ApplyPage() {
           {status === "sent" ? (
             <p
               style={{
-                background: "var(--green-bg)",
-                border: "1px solid var(--green-border)",
+                border: "1px solid var(--green)",
                 color: "var(--green)",
-                borderRadius: "var(--radius-md)",
                 padding: "14px 16px",
                 fontSize: 14,
                 fontWeight: 600,
@@ -141,7 +136,7 @@ export default function ApplyPage() {
                 disabled={status === "sending"}
               >
                 {status === "sending" && <span className="rq-spinner" />}
-                Submit application
+                Add
               </button>
             </form>
           )}

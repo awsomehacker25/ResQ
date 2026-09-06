@@ -2,11 +2,7 @@ import { jsonBody } from "@/lib/owner";
 import { requireAdmin, FORBIDDEN } from "@/lib/admin";
 import { applyForOrg, listOrgs, type OrgStatus } from "@/lib/responderOrgs";
 
-/**
- * Public application intake. No auth: anyone can apply, nothing is granted
- * yet. Email ownership is proven client-side right after this via Google
- * sign-in, not an emailed link, so nothing here sends mail.
- */
+// no auth needed, applying grants nothing - email ownership is proven via Google sign-in after this, not a mailed link
 export async function POST(request: Request) {
   const body = await jsonBody(request);
   const result = await applyForOrg({
@@ -21,7 +17,6 @@ export async function POST(request: Request) {
   return Response.json({ id: result.id, status: result.status }, { status: 201 });
 }
 
-/** Admin review queue. */
 export async function GET(request: Request) {
   if (!(await requireAdmin(request))) return FORBIDDEN;
   const status = new URL(request.url).searchParams.get("status") as OrgStatus | null;

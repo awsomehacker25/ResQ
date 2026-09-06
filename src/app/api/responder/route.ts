@@ -5,7 +5,7 @@ import { markUnlocked } from "@/lib/scan";
 
 const DENIED = { error: "Code not recognized" };
 
-/** Responder unlock. Every failure looks the same from outside. */
+// every failure looks the same from outside
 export async function POST(request: Request) {
   if (rateLimited(clientKey(request))) {
     return Response.json(DENIED, { status: 429 });
@@ -19,7 +19,6 @@ export async function POST(request: Request) {
   const [record, orgName] = await Promise.all([loadBySlug(slug), verifyCode(code)]);
   if (!record || !orgName) return Response.json(DENIED, { status: 401 });
 
-  // Visible accountability: the scan log records who unlocked the record.
   if (typeof body.scanId === "string") await markUnlocked(body.scanId, code.toUpperCase(), record.profile.id);
 
   return Response.json(

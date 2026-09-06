@@ -1,9 +1,6 @@
 import { serviceClient } from "./supabase";
 
-/**
- * ponytail: in-memory limiter, single instance only. Move to a Postgres
- * table or Upstash if this ever runs on more than one Vercel lambda.
- */
+// ponytail: in-memory limiter, single instance only. Move to Postgres/Upstash if this scales past one lambda.
 const attempts = new Map<string, { count: number; resetAt: number }>();
 const WINDOW_MS = 60_000;
 const MAX_ATTEMPTS = 5;
@@ -25,13 +22,7 @@ type CodeRow = {
   responder_orgs: { status: string } | null;
 };
 
-/** Returns the org name for an active code, null otherwise. The caller must
- *  report the same generic failure either way, no hint about which codes
- *  are valid.
- *
- *  A code linked to a self-serve org (org_id set) only works while that
- *  org's application is approved; a legacy seeded code (org_id null) has no
- *  org to check and works as long as it is active. */
+// null for any invalid code - caller must report the same generic failure either way
 export async function verifyCode(code: string): Promise<string | null> {
   const { data } = await serviceClient()
     .from("responders")

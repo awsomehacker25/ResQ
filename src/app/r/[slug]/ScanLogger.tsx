@@ -2,12 +2,7 @@
 
 import { useEffect } from "react";
 
-/**
- * Fires the scan/notify path client-side so the page above it can still be
- * fully server-rendered and readable with no JS. Geolocation is best-effort
- * and never blocks: a denied or slow permission prompt still reports the
- * scan via IP-derived location on the server.
- */
+// geolocation is best-effort, never blocks - denied/slow permission still reports via IP location
 export function ScanLogger({ slug }: { slug: string }) {
   useEffect(() => {
     let cancelled = false;

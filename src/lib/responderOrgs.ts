@@ -24,7 +24,6 @@ export type ApplyInput = {
   phone?: string;
 };
 
-/** Submits an org application. Does not issue a code; that happens on approval. */
 export async function applyForOrg(input: ApplyInput): Promise<ResponderOrg | { error: string }> {
   const orgName = input.orgName.trim();
   const orgType = input.orgType.trim();
@@ -54,7 +53,6 @@ export async function applyForOrg(input: ApplyInput): Promise<ResponderOrg | { e
 
 export type ResponderOrgWithCode = ResponderOrg & { code: string | null };
 
-/** Includes the code issued on approval, if any, so the review queue can show it. */
 export async function listOrgs(status?: OrgStatus): Promise<ResponderOrgWithCode[]> {
   let query = serviceClient()
     .from("responder_orgs")
@@ -77,7 +75,7 @@ function prefixFromName(name: string): string {
   return (letters || "ORG").slice(0, 4);
 }
 
-/** Allocates a globally unique "PREFIX-1234" code, mirroring allocateDialCode. */
+// Allocates a globally unique "PREFIX-1234" code, mirroring allocateDialCode.
 async function allocateResponderCode(orgName: string): Promise<string> {
   const db = serviceClient();
   const prefix = prefixFromName(orgName);
@@ -93,7 +91,6 @@ async function allocateResponderCode(orgName: string): Promise<string> {
   throw new Error("Could not allocate a responder code");
 }
 
-/** Approves a pending org and issues its first working code. */
 export async function approveOrg(orgId: string): Promise<{ code: string } | { error: string }> {
   const db = serviceClient();
   const { data: org } = await db
