@@ -1,6 +1,6 @@
 import { buildPayload, loadBySlug } from "@/lib/profile";
 import { clientKey, rateLimited, verifyCode } from "@/lib/responder";
-import { jsonBody } from "@/lib/owner";
+import { jsonBody } from "@/lib/supabase";
 import { markUnlocked } from "@/lib/scan";
 
 const DENIED = { error: "Code not recognized" };

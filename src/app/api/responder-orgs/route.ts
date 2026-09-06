@@ -1,6 +1,5 @@
-import { jsonBody } from "@/lib/owner";
-import { requireAdmin, FORBIDDEN } from "@/lib/admin";
-import { applyForOrg, listOrgs, type OrgStatus } from "@/lib/responderOrgs";
+import { jsonBody, requireAdmin, FORBIDDEN } from "@/lib/supabase";
+import { applyForOrg, listOrgs, type OrgStatus } from "@/lib/responder";
 
 // no auth needed, applying grants nothing - email ownership is proven via Google sign-in after this, not a mailed link
 export async function POST(request: Request) {

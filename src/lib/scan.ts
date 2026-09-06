@@ -1,7 +1,6 @@
 import twilio from "twilio";
 import { serviceClient } from "./supabase";
-import type { ProfileRecord } from "./profile";
-import type { Contact, Scan } from "./types";
+import type { Contact, ProfileRecord, Scan } from "./profile";
 
 type ScanLocation = { city: string | null; lat: number | null; lng: number | null };
 

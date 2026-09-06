@@ -1,5 +1,5 @@
-import { DEFAULT_CATEGORY, isCategory, rankFor } from "@/lib/fields";
-import { jsonBody, ownerDb, UNAUTHORIZED } from "@/lib/owner";
+import { DEFAULT_CATEGORY, isCategory, rankFor } from "@/lib/profile";
+import { jsonBody, ownerDb, UNAUTHORIZED } from "@/lib/supabase";
 
 type Ctx = { params: Promise<{ id: string }> };
 

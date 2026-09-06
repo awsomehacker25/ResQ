@@ -1,5 +1,78 @@
-import type { Contact, Field, Profile, Tier } from "./types";
 import { serviceClient } from "./supabase";
+
+// ---------- data model (mirrors the Postgres schema in supabase/migrations) ----------
+
+export type Tier = "public" | "gated";
+
+export type Profile = {
+  id: string;
+  user_id: string;
+  slug: string;
+  display_name: string;
+  photo_url: string | null;
+  created_at: string;
+};
+
+export type Field = {
+  id: string;
+  profile_id: string;
+  key: string;
+  label: string;
+  value: string;
+  tier: Tier;
+  category: string;
+  rank: number;
+  created_at: string;
+};
+
+export type Contact = {
+  id: string;
+  profile_id: string;
+  name: string;
+  relationship: string | null;
+  phone: string;
+  tier: Tier;
+  notify: boolean;
+  rank: number;
+  dial_code: string;
+  created_at: string;
+};
+
+export type Scan = {
+  id: string;
+  profile_id: string;
+  scanned_at: string;
+  tier: Tier;
+  ip_city: string | null;
+  lat: number | null;
+  lng: number | null;
+  responder_code: string | null;
+  user_agent: string | null;
+};
+
+// ---------- field categories ----------
+
+// Field order is app-enforced, never user-editable: a medic scanning a
+// stranger needs blood type in the same place every time.
+export const CATEGORY_RANK: Record<string, number> = {
+  critical: 0,   // allergies, blood type, anything life-threatening
+  medical: 100,  // medications, conditions, devices
+  identity: 200, // name, age, DOB, address, spoken language
+  admin: 300,    // insurance, physician, directives, organ donor
+};
+
+export const CATEGORIES = Object.keys(CATEGORY_RANK);
+export const DEFAULT_CATEGORY = "medical";
+
+export function rankFor(category: string): number {
+  return CATEGORY_RANK[category] ?? CATEGORY_RANK[DEFAULT_CATEGORY];
+}
+
+export function isCategory(value: unknown): value is string {
+  return typeof value === "string" && value in CATEGORY_RANK;
+}
+
+// ---------- slugs ----------
 
 const SLUG_ALPHABET = "abcdefghijklmnopqrstuvwxyz0123456789";
 
@@ -8,6 +81,8 @@ export function generateSlug(): string {
   const bytes = crypto.getRandomValues(new Uint8Array(8));
   return Array.from(bytes, (b) => SLUG_ALPHABET[b % SLUG_ALPHABET.length]).join("");
 }
+
+// ---------- tier filtering: the actual privacy boundary ----------
 
 export type PublicField = { key: string; label: string; value: string; category: string };
 
@@ -90,6 +165,8 @@ export function buildPayload(
     ...(unlockedBy ? { unlockedBy } : {}),
   };
 }
+
+// ---------- loading a profile by its public slug ----------
 
 export type ProfileRecord = { profile: Profile; fields: Field[]; contacts: Contact[] };
 

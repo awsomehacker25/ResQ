@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { browserClient, isSupabaseConfigured } from "@/lib/supabase-browser";
 import { GoogleIcon, ShieldIcon } from "@/components/icons";
+import { CenteredCard } from "@/components/CenteredCard";
 
 type Mode = "signin" | "signup" | "forgot";
 
@@ -16,17 +17,15 @@ export function Login() {
 
   if (!isSupabaseConfigured()) {
     return (
-      <div className="rq-center-card">
-        <div className="rq-container-narrow">
-          <div className="rq-card" style={{ padding: 32, textAlign: "center" }}>
-            <h1 style={{ fontSize: 19, margin: "0 0 8px" }}>Supabase isn&rsquo;t configured</h1>
-            <p style={{ color: "var(--muted)", fontSize: 14, lineHeight: 1.5 }}>
-              Set <code>NEXT_PUBLIC_SUPABASE_URL</code> and{" "}
-              <code>NEXT_PUBLIC_SUPABASE_ANON_KEY</code> in <code>.env.local</code>.
-            </p>
-          </div>
+      <CenteredCard>
+        <div className="rq-card" style={{ padding: 32, textAlign: "center" }}>
+          <h1 style={{ fontSize: 19, margin: "0 0 8px" }}>Supabase isn&rsquo;t configured</h1>
+          <p style={{ color: "var(--muted)", fontSize: 14, lineHeight: 1.5 }}>
+            Set <code>NEXT_PUBLIC_SUPABASE_URL</code> and{" "}
+            <code>NEXT_PUBLIC_SUPABASE_ANON_KEY</code> in <code>.env.local</code>.
+          </p>
         </div>
-      </div>
+      </CenteredCard>
     );
   }
 
@@ -93,167 +92,165 @@ export function Login() {
         : "We'll email you a link to set a new password.";
 
   return (
-    <div className="rq-center-card">
-      <div className="rq-container-narrow">
-        <div className="rq-card" style={{ padding: 36 }}>
-          <div className="rq-empty-shield" style={{ margin: "0 auto 18px" }}>
-            <ShieldIcon size={22} />
-          </div>
-          <h1 style={{ fontSize: 21, textAlign: "center", margin: "0 0 6px" }}>{title}</h1>
-          <p style={{ color: "var(--muted)", fontSize: 14, textAlign: "center", margin: "0 0 26px" }}>
-            {subtitle}
+    <CenteredCard>
+      <div className="rq-card" style={{ padding: 36 }}>
+        <div className="rq-empty-shield" style={{ margin: "0 auto 18px" }}>
+          <ShieldIcon size={22} />
+        </div>
+        <h1 style={{ fontSize: 21, textAlign: "center", margin: "0 0 6px" }}>{title}</h1>
+        <p style={{ color: "var(--muted)", fontSize: 14, textAlign: "center", margin: "0 0 26px" }}>
+          {subtitle}
+        </p>
+
+        {status === "checkEmail" ? (
+          <p
+            style={{
+              border: "1px solid var(--green)",
+              color: "var(--green)",
+              padding: "14px 16px",
+              fontSize: 14,
+              fontWeight: 600,
+              textAlign: "center",
+            }}
+          >
+            {mode === "forgot" ? `Check ${email} for a link to set a new password.` : `Check ${email} to confirm your account.`}
           </p>
-
-          {status === "checkEmail" ? (
-            <p
-              style={{
-                border: "1px solid var(--green)",
-                color: "var(--green)",
-                padding: "14px 16px",
-                fontSize: 14,
-                fontWeight: 600,
-                textAlign: "center",
-              }}
-            >
-              {mode === "forgot" ? `Check ${email} for a link to set a new password.` : `Check ${email} to confirm your account.`}
-            </p>
-          ) : (
-            <form onSubmit={submit} style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+        ) : (
+          <form onSubmit={submit} style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+            <div className="rq-field">
+              <label className="rq-label" htmlFor="email">
+                Email
+              </label>
+              <input
+                id="email"
+                className="rq-input"
+                type="email"
+                required
+                autoFocus
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="you@example.com"
+              />
+            </div>
+            {mode !== "forgot" && (
               <div className="rq-field">
-                <label className="rq-label" htmlFor="email">
-                  Email
+                <label className="rq-label" htmlFor="password">
+                  Password
                 </label>
-                <input
-                  id="email"
-                  className="rq-input"
-                  type="email"
-                  required
-                  autoFocus
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="you@example.com"
-                />
-              </div>
-              {mode !== "forgot" && (
-                <div className="rq-field">
-                  <label className="rq-label" htmlFor="password">
-                    Password
-                  </label>
-                  <div style={{ position: "relative" }}>
-                    <input
-                      id="password"
-                      className="rq-input"
-                      type={showPassword ? "text" : "password"}
-                      required
-                      minLength={6}
-                      autoComplete={mode === "signup" ? "new-password" : "current-password"}
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      placeholder="At least 6 characters"
-                      style={{ paddingRight: 40 }}
-                    />
-                    <button
-                      type="button"
-                      onClick={() => setShowPassword((v) => !v)}
-                      title={showPassword ? "Hide password" : "Show password"}
-                      style={{
-                        position: "absolute",
-                        right: 4,
-                        top: "50%",
-                        transform: "translateY(-50%)",
-                        background: "none",
-                        border: "none",
-                        cursor: "pointer",
-                        padding: 6,
-                        display: "flex",
-                        color: "var(--faint)",
-                      }}
-                    >
-                      {showPassword ? "Hide" : "Show"}
-                    </button>
-                  </div>
+                <div style={{ position: "relative" }}>
+                  <input
+                    id="password"
+                    className="rq-input"
+                    type={showPassword ? "text" : "password"}
+                    required
+                    minLength={6}
+                    autoComplete={mode === "signup" ? "new-password" : "current-password"}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="At least 6 characters"
+                    style={{ paddingRight: 40 }}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword((v) => !v)}
+                    title={showPassword ? "Hide password" : "Show password"}
+                    style={{
+                      position: "absolute",
+                      right: 4,
+                      top: "50%",
+                      transform: "translateY(-50%)",
+                      background: "none",
+                      border: "none",
+                      cursor: "pointer",
+                      padding: 6,
+                      display: "flex",
+                      color: "var(--faint)",
+                    }}
+                  >
+                    {showPassword ? "Hide" : "Show"}
+                  </button>
                 </div>
-              )}
-              {mode === "signin" && (
-                <button
-                  type="button"
-                  className="rq-hint"
-                  style={{ background: "none", border: "none", cursor: "pointer", padding: 0, textAlign: "right" }}
-                  onClick={() => switchMode("forgot")}
-                >
-                  Forgot password?
-                </button>
-              )}
-              {status === "error" && <p className="rq-error-text">{error}</p>}
-              <button
-                type="submit"
-                className="rq-btn rq-btn-primary rq-btn-block"
-                disabled={status === "busy"}
-              >
-                {status === "busy" && <span className="rq-spinner" />}
-                {mode === "signin" ? "Sign in" : mode === "signup" ? "Add" : "Send"}
-              </button>
-            </form>
-          )}
-
-          {status !== "checkEmail" && mode !== "forgot" && (
-            <>
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 10,
-                  margin: "18px 0",
-                  color: "var(--faint)",
-                  fontSize: 12,
-                }}
-              >
-                <span style={{ flex: 1, height: 1, background: "var(--border)" }} />
-                or
-                <span style={{ flex: 1, height: 1, background: "var(--border)" }} />
               </div>
+            )}
+            {mode === "signin" && (
               <button
                 type="button"
-                className="rq-btn rq-btn-ghost rq-btn-block"
-                onClick={withGoogle}
-                disabled={status === "busy"}
-                style={{ gap: 10 }}
+                className="rq-hint"
+                style={{ background: "none", border: "none", cursor: "pointer", padding: 0, textAlign: "right" }}
+                onClick={() => switchMode("forgot")}
               >
-                <GoogleIcon size={17} />
-                Continue with Google
+                Forgot password?
+              </button>
+            )}
+            {status === "error" && <p className="rq-error-text">{error}</p>}
+            <button
+              type="submit"
+              className="rq-btn rq-btn-primary rq-btn-block"
+              disabled={status === "busy"}
+            >
+              {status === "busy" && <span className="rq-spinner" />}
+              {mode === "signin" ? "Sign in" : mode === "signup" ? "Add" : "Send"}
+            </button>
+          </form>
+        )}
+
+        {status !== "checkEmail" && mode !== "forgot" && (
+          <>
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 10,
+                margin: "18px 0",
+                color: "var(--faint)",
+                fontSize: 12,
+              }}
+            >
+              <span style={{ flex: 1, height: 1, background: "var(--border)" }} />
+              or
+              <span style={{ flex: 1, height: 1, background: "var(--border)" }} />
+            </div>
+            <button
+              type="button"
+              className="rq-btn rq-btn-ghost rq-btn-block"
+              onClick={withGoogle}
+              disabled={status === "busy"}
+              style={{ gap: 10 }}
+            >
+              <GoogleIcon size={17} />
+              Continue with Google
+            </button>
+          </>
+        )}
+
+        <p style={{ textAlign: "center", marginTop: 20, fontSize: 13 }}>
+          {mode === "signin" ? (
+            <>
+              No account?{" "}
+              <button
+                type="button"
+                className="rq-hint"
+                style={{ background: "none", border: "none", cursor: "pointer", padding: 0 }}
+                onClick={() => switchMode("signup")}
+              >
+                Create one
+              </button>
+            </>
+          ) : (
+            <>
+              {mode === "forgot" ? "Remembered it?" : "Already have an account?"}{" "}
+              <button
+                type="button"
+                className="rq-hint"
+                style={{ background: "none", border: "none", cursor: "pointer", padding: 0 }}
+                onClick={() => switchMode("signin")}
+              >
+                Sign in
               </button>
             </>
           )}
-
-          <p style={{ textAlign: "center", marginTop: 20, fontSize: 13 }}>
-            {mode === "signin" ? (
-              <>
-                No account?{" "}
-                <button
-                  type="button"
-                  className="rq-hint"
-                  style={{ background: "none", border: "none", cursor: "pointer", padding: 0 }}
-                  onClick={() => switchMode("signup")}
-                >
-                  Create one
-                </button>
-              </>
-            ) : (
-              <>
-                {mode === "forgot" ? "Remembered it?" : "Already have an account?"}{" "}
-                <button
-                  type="button"
-                  className="rq-hint"
-                  style={{ background: "none", border: "none", cursor: "pointer", padding: 0 }}
-                  onClick={() => switchMode("signin")}
-                >
-                  Sign in
-                </button>
-              </>
-            )}
-          </p>
-        </div>
+        </p>
       </div>
-    </div>
+    </CenteredCard>
   );
 }

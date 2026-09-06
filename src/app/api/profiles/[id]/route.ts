@@ -1,4 +1,4 @@
-import { jsonBody, ownerDb, pick, UNAUTHORIZED } from "@/lib/owner";
+import { jsonBody, ownerDb, pick, UNAUTHORIZED } from "@/lib/supabase";
 
 type Ctx = { params: Promise<{ id: string }> };
 

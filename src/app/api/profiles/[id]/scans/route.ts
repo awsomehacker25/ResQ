@@ -1,4 +1,4 @@
-import { ownerDb, UNAUTHORIZED } from "@/lib/owner";
+import { ownerDb, UNAUTHORIZED } from "@/lib/supabase";
 
 export async function GET(request: Request, ctx: { params: Promise<{ id: string }> }) {
   const db = ownerDb(request);

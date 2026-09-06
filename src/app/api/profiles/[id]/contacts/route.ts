@@ -1,4 +1,4 @@
-import { jsonBody, ownerDb, UNAUTHORIZED } from "@/lib/owner";
+import { jsonBody, ownerDb, UNAUTHORIZED } from "@/lib/supabase";
 import { allocateDialCode } from "@/lib/voice";
 
 type Ctx = { params: Promise<{ id: string }> };

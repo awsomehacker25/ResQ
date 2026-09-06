@@ -1,5 +1,5 @@
 import { generateSlug } from "@/lib/profile";
-import { jsonBody, ownerDb, UNAUTHORIZED } from "@/lib/owner";
+import { jsonBody, ownerDb, UNAUTHORIZED } from "@/lib/supabase";
 
 export async function GET(request: Request) {
   const db = ownerDb(request);

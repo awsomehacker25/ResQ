@@ -1,5 +1,5 @@
 import { buildPayload, loadBySlug } from "@/lib/profile";
-import { jsonBody } from "@/lib/owner";
+import { jsonBody } from "@/lib/supabase";
 import { recordScan } from "@/lib/scan";
 
 function coord(value: unknown): number | null {

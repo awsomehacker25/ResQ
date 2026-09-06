@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { browserClient } from "@/lib/supabase-browser";
 import { ShieldIcon } from "@/components/icons";
+import { CenteredCard } from "@/components/CenteredCard";
 
 type State = "checking" | "ready" | "invalid" | "done";
 
@@ -60,73 +61,71 @@ export default function ResetPasswordPage() {
   }
 
   return (
-    <div className="rq-center-card">
-      <div className="rq-container-narrow">
-        <div className="rq-card" style={{ padding: 36, textAlign: "center" }}>
-          <div className="rq-empty-shield" style={{ margin: "0 auto 18px" }}>
-            <ShieldIcon size={22} />
-          </div>
-
-          {state === "checking" && (
-            <>
-              <h1 style={{ fontSize: 19, margin: "0 0 8px" }}>One moment</h1>
-              <p style={{ color: "var(--muted)", fontSize: 14 }}>Confirming your reset link...</p>
-            </>
-          )}
-
-          {state === "invalid" && (
-            <>
-              <h1 style={{ fontSize: 19, margin: "0 0 8px" }}>Link invalid or expired</h1>
-              <p style={{ color: "var(--muted)", fontSize: 14 }}>
-                Go back to sign-in and request a new password reset link.
-              </p>
-            </>
-          )}
-
-          {state === "done" && (
-            <>
-              <h1 style={{ fontSize: 19, margin: "0 0 8px" }}>Password updated</h1>
-              <p style={{ color: "var(--muted)", fontSize: 14 }}>Taking you to the dashboard...</p>
-            </>
-          )}
-
-          {state === "ready" && (
-            <>
-              <h1 style={{ fontSize: 19, margin: "0 0 6px" }}>Set a new password</h1>
-              <p style={{ color: "var(--muted)", fontSize: 14, margin: "0 0 26px" }}>
-                Choose a new password for your account.
-              </p>
-              <form
-                onSubmit={submit}
-                style={{ display: "flex", flexDirection: "column", gap: 12, textAlign: "left" }}
-              >
-                <div className="rq-field">
-                  <label className="rq-label" htmlFor="password">
-                    New password
-                  </label>
-                  <input
-                    id="password"
-                    className="rq-input"
-                    type="password"
-                    required
-                    minLength={6}
-                    autoComplete="new-password"
-                    autoFocus
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    placeholder="At least 6 characters"
-                  />
-                </div>
-                {error && <p className="rq-error-text">{error}</p>}
-                <button type="submit" className="rq-btn rq-btn-primary rq-btn-block" disabled={busy}>
-                  {busy && <span className="rq-spinner" />}
-                  Save
-                </button>
-              </form>
-            </>
-          )}
+    <CenteredCard>
+      <div className="rq-card" style={{ padding: 36, textAlign: "center" }}>
+        <div className="rq-empty-shield" style={{ margin: "0 auto 18px" }}>
+          <ShieldIcon size={22} />
         </div>
+
+        {state === "checking" && (
+          <>
+            <h1 style={{ fontSize: 19, margin: "0 0 8px" }}>One moment</h1>
+            <p style={{ color: "var(--muted)", fontSize: 14 }}>Confirming your reset link...</p>
+          </>
+        )}
+
+        {state === "invalid" && (
+          <>
+            <h1 style={{ fontSize: 19, margin: "0 0 8px" }}>Link invalid or expired</h1>
+            <p style={{ color: "var(--muted)", fontSize: 14 }}>
+              Go back to sign-in and request a new password reset link.
+            </p>
+          </>
+        )}
+
+        {state === "done" && (
+          <>
+            <h1 style={{ fontSize: 19, margin: "0 0 8px" }}>Password updated</h1>
+            <p style={{ color: "var(--muted)", fontSize: 14 }}>Taking you to the dashboard...</p>
+          </>
+        )}
+
+        {state === "ready" && (
+          <>
+            <h1 style={{ fontSize: 19, margin: "0 0 6px" }}>Set a new password</h1>
+            <p style={{ color: "var(--muted)", fontSize: 14, margin: "0 0 26px" }}>
+              Choose a new password for your account.
+            </p>
+            <form
+              onSubmit={submit}
+              style={{ display: "flex", flexDirection: "column", gap: 12, textAlign: "left" }}
+            >
+              <div className="rq-field">
+                <label className="rq-label" htmlFor="password">
+                  New password
+                </label>
+                <input
+                  id="password"
+                  className="rq-input"
+                  type="password"
+                  required
+                  minLength={6}
+                  autoComplete="new-password"
+                  autoFocus
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="At least 6 characters"
+                />
+              </div>
+              {error && <p className="rq-error-text">{error}</p>}
+              <button type="submit" className="rq-btn rq-btn-primary rq-btn-block" disabled={busy}>
+                {busy && <span className="rq-spinner" />}
+                Save
+              </button>
+            </form>
+          </>
+        )}
       </div>
-    </div>
+    </CenteredCard>
   );
 }

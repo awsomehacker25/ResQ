@@ -1,5 +1,5 @@
-import { isCategory, rankFor } from "@/lib/fields";
-import { jsonBody, ownerDb, pick, UNAUTHORIZED } from "@/lib/owner";
+import { isCategory, rankFor } from "@/lib/profile";
+import { jsonBody, ownerDb, pick, UNAUTHORIZED } from "@/lib/supabase";
 
 type Ctx = { params: Promise<{ id: string }> };
 

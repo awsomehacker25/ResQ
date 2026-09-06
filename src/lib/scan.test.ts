@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import type { Contact, Profile } from "./types";
+import type { Contact, Profile } from "./profile";
 
 const insert = vi.fn();
 const from = vi.fn(() => ({ insert }));

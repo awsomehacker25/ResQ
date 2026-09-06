@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { serviceClient } from "@/lib/supabase";
 import { ShieldIcon } from "@/components/icons";
+import { CenteredCard } from "@/components/CenteredCard";
 
 export const metadata: Metadata = { title: "ResQ: Scan alert" };
 
@@ -30,19 +31,17 @@ export default async function ScanAlertPage({ params }: { params: Promise<{ id: 
 
   if (!data?.profiles) {
     return (
-      <div className="rq-center-card">
-        <div className="rq-container-narrow">
-          <div className="rq-card" style={{ padding: 36, textAlign: "center" }}>
-            <div className="rq-empty-shield" style={{ margin: "0 auto 16px" }}>
-              <ShieldIcon size={22} />
-            </div>
-            <h1 style={{ fontSize: 19, margin: "0 0 8px" }}>Alert not found</h1>
-            <p style={{ color: "var(--muted)", fontSize: 14.5, margin: 0 }}>
-              This alert link is no longer valid.
-            </p>
+      <CenteredCard>
+        <div className="rq-card" style={{ padding: 36, textAlign: "center" }}>
+          <div className="rq-empty-shield" style={{ margin: "0 auto 16px" }}>
+            <ShieldIcon size={22} />
           </div>
+          <h1 style={{ fontSize: 19, margin: "0 0 8px" }}>Alert not found</h1>
+          <p style={{ color: "var(--muted)", fontSize: 14.5, margin: 0 }}>
+            This alert link is no longer valid.
+          </p>
         </div>
-      </div>
+      </CenteredCard>
     );
   }
 
@@ -56,61 +55,59 @@ export default async function ScanAlertPage({ params }: { params: Promise<{ id: 
         : null;
 
   return (
-    <div className="rq-center-card">
-      <div className="rq-container-narrow">
-        <div className="rq-card" style={{ padding: 28 }}>
-          <p className="rq-hint" style={{ marginBottom: 14 }}>ResQ alert</p>
-          <h1 style={{ fontSize: 20, margin: "0 0 6px" }}>
-            {name}&rsquo;s emergency code was scanned
-          </h1>
-          <p style={{ color: "var(--muted)", fontSize: 14, margin: "0 0 22px", lineHeight: 1.5 }}>
-            Someone opened this profile. If you can, try reaching {name} directly.
-          </p>
+    <CenteredCard>
+      <div className="rq-card" style={{ padding: 28 }}>
+        <p className="rq-hint" style={{ marginBottom: 14 }}>ResQ alert</p>
+        <h1 style={{ fontSize: 20, margin: "0 0 6px" }}>
+          {name}&rsquo;s emergency code was scanned
+        </h1>
+        <p style={{ color: "var(--muted)", fontSize: 14, margin: "0 0 22px", lineHeight: 1.5 }}>
+          Someone opened this profile. If you can, try reaching {name} directly.
+        </p>
 
-          <div className="rq-section">
-            <div className="rq-fact-row">
-              <span className="rq-fact-label">When</span>
-              <span className="rq-fact-value">{new Date(data.scanned_at).toLocaleString()}</span>
-            </div>
-            <div className="rq-fact-row">
-              <span className="rq-fact-label">Where</span>
-              <span className="rq-fact-value">
-                {data.lat != null && data.lng != null
-                  ? `${place} (${data.lat.toFixed(4)}, ${data.lng.toFixed(4)})`
-                  : place}
-              </span>
-            </div>
-            <div className="rq-fact-row">
-              <span className="rq-fact-label">Opened by</span>
-              <span className="rq-fact-value">
-                <span
-                  className={`rq-badge${data.tier === "gated" ? " rq-badge-critical" : ""}`}
-                >
-                  {data.tier === "gated"
-                    ? `First responder${data.responder_code ? ` · ${data.responder_code}` : ""}`
-                    : "Bystander"}
-                </span>
-              </span>
-            </div>
+        <div className="rq-section">
+          <div className="rq-fact-row">
+            <span className="rq-fact-label">When</span>
+            <span className="rq-fact-value">{new Date(data.scanned_at).toLocaleString()}</span>
           </div>
-
-          <div style={{ display: "flex", flexDirection: "column", gap: 10, marginTop: 20 }}>
-            {mapHref && (
-              <a
-                className="rq-btn rq-btn-primary rq-btn-block"
-                href={mapHref}
-                target="_blank"
-                rel="noreferrer"
+          <div className="rq-fact-row">
+            <span className="rq-fact-label">Where</span>
+            <span className="rq-fact-value">
+              {data.lat != null && data.lng != null
+                ? `${place} (${data.lat.toFixed(4)}, ${data.lng.toFixed(4)})`
+                : place}
+            </span>
+          </div>
+          <div className="rq-fact-row">
+            <span className="rq-fact-label">Opened by</span>
+            <span className="rq-fact-value">
+              <span
+                className={`rq-badge${data.tier === "gated" ? " rq-badge-critical" : ""}`}
               >
-                Open in Maps
-              </a>
-            )}
-            <a className="rq-btn rq-btn-ghost rq-btn-block" href={`/r/${slug}`}>
-              View {name}&rsquo;s emergency profile
-            </a>
+                {data.tier === "gated"
+                  ? `First responder${data.responder_code ? ` · ${data.responder_code}` : ""}`
+                  : "Bystander"}
+              </span>
+            </span>
           </div>
         </div>
+
+        <div style={{ display: "flex", flexDirection: "column", gap: 10, marginTop: 20 }}>
+          {mapHref && (
+            <a
+              className="rq-btn rq-btn-primary rq-btn-block"
+              href={mapHref}
+              target="_blank"
+              rel="noreferrer"
+            >
+              Open in Maps
+            </a>
+          )}
+          <a className="rq-btn rq-btn-ghost rq-btn-block" href={`/r/${slug}`}>
+            View {name}&rsquo;s emergency profile
+          </a>
+        </div>
       </div>
-    </div>
+    </CenteredCard>
   );
 }

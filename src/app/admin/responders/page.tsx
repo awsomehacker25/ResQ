@@ -6,6 +6,7 @@ import { browserClient, isSupabaseConfigured } from "@/lib/supabase-browser";
 import { Login } from "@/app/dashboard/Login";
 import { ShieldIcon } from "@/components/icons";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import { CenteredCard } from "@/components/CenteredCard";
 
 type Org = {
   id: string;
@@ -133,17 +134,15 @@ export default function AdminRespondersPage() {
 
   if (forbidden) {
     return (
-      <div className="rq-center-card">
-        <div className="rq-container-narrow">
-          <div className="rq-card" style={{ padding: 32, textAlign: "center" }}>
-            <h1 style={{ fontSize: 19, margin: "0 0 8px" }}>Not authorized</h1>
-            <p style={{ color: "var(--muted)", fontSize: 14 }}>
-              This account isn&rsquo;t the configured admin. Sign in with the address set in
-              <code> RESQ_ADMIN_EMAIL</code>.
-            </p>
-          </div>
+      <CenteredCard>
+        <div className="rq-card" style={{ padding: 32, textAlign: "center" }}>
+          <h1 style={{ fontSize: 19, margin: "0 0 8px" }}>Not authorized</h1>
+          <p style={{ color: "var(--muted)", fontSize: 14 }}>
+            This account isn&rsquo;t the configured admin. Sign in with the address set in
+            <code> RESQ_ADMIN_EMAIL</code>.
+          </p>
         </div>
-      </div>
+      </CenteredCard>
     );
   }
 

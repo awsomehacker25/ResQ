@@ -1,5 +1,5 @@
 import { describe, expect, it, vi, beforeEach } from "vitest";
-import type { Contact, Field, Profile } from "./types";
+import type { Contact, Field, Profile } from "./profile";
 
 const from = vi.fn();
 vi.mock("./supabase", () => ({ serviceClient: () => ({ from }) }));

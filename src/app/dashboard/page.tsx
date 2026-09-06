@@ -5,10 +5,8 @@ import Link from "next/link";
 import { browserClient, isSupabaseConfigured } from "@/lib/supabase-browser";
 import { ShieldIcon } from "@/components/icons";
 import { ThemeToggle } from "@/components/ThemeToggle";
-import type { Contact, Field, Profile, Tier } from "@/lib/types";
-import { buildPayload } from "@/lib/profile";
+import { buildPayload, CATEGORIES, type Contact, type Field, type Profile, type Tier } from "@/lib/profile";
 import { ProfileCard } from "@/components/ProfileCard";
-import { CATEGORIES } from "@/lib/fields";
 import { Login } from "./Login";
 
 async function call(path: string, token: string, init?: RequestInit) {
