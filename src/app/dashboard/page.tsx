@@ -106,44 +106,39 @@ function ProfileSwitcher({
   }
 
   return (
-    <div className="rq-card rq-panel">
-      <p className="rq-panel-title">Profiles</p>
-      <div className="rq-profile-list">
-        {profiles.map((p) => (
-          <button
-            key={p.id}
-            className="rq-profile-item"
-            data-active={p.id === activeId}
-            onClick={() => onSelect(p.id)}
-          >
-            <span className="rq-avatar-sm">{initials(p.display_name)}</span>
-            {p.display_name}
-          </button>
-        ))}
-        {profiles.length === 0 && <p className="rq-hint">No profiles yet.</p>}
-      </div>
+    <div className="rq-profile-bar">
+      {profiles.map((p) => (
+        <button
+          key={p.id}
+          className="rq-profile-item"
+          data-active={p.id === activeId}
+          onClick={() => onSelect(p.id)}
+        >
+          <span className="rq-avatar-sm">{initials(p.display_name)}</span>
+          {p.display_name}
+        </button>
+      ))}
 
       {adding ? (
-        <form onSubmit={submit} style={{ marginTop: 10, display: "flex", flexDirection: "column", gap: 8 }}>
+        <form onSubmit={submit} style={{ display: "flex", gap: 6 }}>
           <input
             className="rq-input"
             placeholder="Name"
             value={name}
             onChange={(e) => setName(e.target.value)}
+            style={{ width: 160 }}
             autoFocus
           />
-          <div style={{ display: "flex", gap: 8 }}>
-            <button type="button" className="rq-btn rq-btn-ghost rq-btn-sm" style={{ flex: 1 }} onClick={() => setAdding(false)}>
-              Cancel
-            </button>
-            <button type="submit" className="rq-btn rq-btn-primary rq-btn-sm" style={{ flex: 1 }} disabled={busy || !name.trim()}>
-              {busy ? <span className="rq-spinner" /> : "Add"}
-            </button>
-          </div>
+          <button type="submit" className="rq-btn rq-btn-primary rq-btn-sm" disabled={busy || !name.trim()}>
+            {busy ? <span className="rq-spinner" /> : "Add"}
+          </button>
+          <button type="button" className="rq-btn rq-btn-ghost rq-btn-sm" onClick={() => setAdding(false)}>
+            Cancel
+          </button>
         </form>
       ) : (
-        <button className="rq-btn rq-btn-ghost rq-btn-block rq-btn-sm" style={{ marginTop: 10 }} onClick={() => setAdding(true)}>
-          + Add
+        <button className="rq-btn rq-btn-ghost rq-btn-sm" onClick={() => setAdding(true)}>
+          + Add profile
         </button>
       )}
     </div>
@@ -560,6 +555,33 @@ function QrPanel({ slug, onScan }: { slug: string; onScan?: () => void }) {
   );
 }
 
+function ProfileChecklist({ fields, contacts }: { fields: Field[]; contacts: Contact[] }) {
+  const items = [
+    { label: "At least one field added", done: fields.length > 0 },
+    {
+      label: "Critical info visible to bystanders",
+      done: fields.some((f) => f.category === "critical" && f.tier === "public"),
+    },
+    { label: "Emergency contact added", done: contacts.some((c) => c.notify) },
+  ];
+
+  return (
+    <div className="rq-card rq-panel">
+      <p className="rq-panel-title">Profile readiness</p>
+      <div>
+        {items.map((item) => (
+          <div className="rq-checklist-item" data-done={item.done} key={item.label}>
+            <span className="rq-checklist-mark" data-done={item.done}>
+              {item.done ? "✓" : ""}
+            </span>
+            <span className="rq-checklist-text">{item.label}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 export default function DashboardPage() {
   const [ready, setReady] = useState(false);
   const [token, setToken] = useState<string | null>(null);
@@ -718,12 +740,10 @@ export default function DashboardPage() {
       </header>
 
       <div className="rq-container">
-        <div className="rq-dash-layout">
-          <div className="rq-dash-col">
-            <ProfileSwitcher profiles={profiles} activeId={activeId} onSelect={setActiveId} onCreate={createProfile} />
-          </div>
+        <ProfileSwitcher profiles={profiles} activeId={activeId} onSelect={setActiveId} onCreate={createProfile} />
 
-          <div>
+        <div className="rq-dash-layout">
+          <div className="rq-dash-main">
             {!activeProfile ? (
               <div className="rq-card rq-panel">
                 <p className="rq-panel-title">Create your first profile</p>
@@ -754,6 +774,7 @@ export default function DashboardPage() {
                 )}
               </div>
             )}
+            {activeProfile && !loadingProfile && <ProfileChecklist fields={fields} contacts={contacts} />}
           </div>
 
           {activeProfile && previewPayload && (

@@ -41,6 +41,11 @@ export default async function PublicProfilePage({
     <div className="rq-shell" style={{ padding: "36px 16px", justifyContent: "center" }}>
       <ScanLogger slug={slug} />
       <div className="rq-phone-frame">
+        <p style={{ textAlign: "center", marginBottom: 12 }}>
+          <a className="rq-muted-link" href="/">
+            ← Back to ResQ
+          </a>
+        </p>
         <ProfileCard payload={payload} responderHref={`/r/${slug}/full`} />
         <p
           style={{
