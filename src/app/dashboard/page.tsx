@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import { browserClient, isSupabaseConfigured } from "@/lib/supabase-browser";
+import { ShieldIcon } from "@/components/icons";
 import type { Contact, Field, Profile, Tier } from "@/lib/types";
 import { buildPayload } from "@/lib/profile";
 import { ProfileCard } from "@/components/ProfileCard";
@@ -695,19 +696,24 @@ export default function DashboardPage() {
   return (
     <div className="rq-shell">
       <header className="rq-nav">
-        <Link href="/" className="rq-nav-brand">
-          ResQ
-        </Link>
-        <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
-          {isAdmin && (
-            <Link href="/admin/responders" className="rq-btn rq-btn-ghost rq-btn-sm">
-              Responder review
-            </Link>
-          )}
-          <span style={{ fontSize: 13, color: "var(--muted)" }}>{emailAddr}</span>
-          <button className="rq-btn rq-btn-ghost rq-btn-sm" onClick={() => browserClient().auth.signOut()}>
-            Sign out
-          </button>
+        <div className="rq-nav-inner">
+          <Link href="/" className="rq-nav-brand">
+            <span className="rq-nav-mark">
+              <ShieldIcon size={15} />
+            </span>
+            ResQ
+          </Link>
+          <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+            {isAdmin && (
+              <Link href="/admin/responders" className="rq-btn rq-btn-ghost rq-btn-sm">
+                Responder review
+              </Link>
+            )}
+            <span style={{ fontSize: 13, color: "var(--muted)" }}>{emailAddr}</span>
+            <button className="rq-btn rq-btn-ghost rq-btn-sm" onClick={() => browserClient().auth.signOut()}>
+              Sign out
+            </button>
+          </div>
         </div>
       </header>
 

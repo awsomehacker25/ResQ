@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { serviceClient } from "@/lib/supabase";
+import { ShieldIcon } from "@/components/icons";
 
 export const metadata: Metadata = { title: "ResQ: Scan alert" };
 
@@ -32,7 +33,9 @@ export default async function ScanAlertPage({ params }: { params: Promise<{ id: 
       <div className="rq-center-card">
         <div className="rq-container-narrow">
           <div className="rq-card" style={{ padding: 36, textAlign: "center" }}>
-            <div className="rq-empty-shield" style={{ margin: "0 auto 16px" }} />
+            <div className="rq-empty-shield" style={{ margin: "0 auto 16px" }}>
+              <ShieldIcon size={22} />
+            </div>
             <h1 style={{ fontSize: 19, margin: "0 0 8px" }}>Alert not found</h1>
             <p style={{ color: "var(--muted)", fontSize: 14.5, margin: 0 }}>
               This alert link is no longer valid.

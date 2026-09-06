@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { browserClient, isSupabaseConfigured } from "@/lib/supabase-browser";
+import { GoogleIcon, ShieldIcon } from "@/components/icons";
 
 type Mode = "signin" | "signup" | "forgot";
 
@@ -95,7 +96,9 @@ export function Login() {
     <div className="rq-center-card">
       <div className="rq-container-narrow">
         <div className="rq-card" style={{ padding: 36 }}>
-          <div className="rq-empty-shield" style={{ margin: "0 auto 18px" }} />
+          <div className="rq-empty-shield" style={{ margin: "0 auto 18px" }}>
+            <ShieldIcon size={22} />
+          </div>
           <h1 style={{ fontSize: 21, textAlign: "center", margin: "0 0 6px" }}>{title}</h1>
           <p style={{ color: "var(--muted)", fontSize: 14, textAlign: "center", margin: "0 0 26px" }}>
             {subtitle}
@@ -214,7 +217,9 @@ export function Login() {
                 className="rq-btn rq-btn-ghost rq-btn-block"
                 onClick={withGoogle}
                 disabled={status === "busy"}
+                style={{ gap: 10 }}
               >
+                <GoogleIcon size={17} />
                 Continue with Google
               </button>
             </>

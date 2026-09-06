@@ -3,6 +3,7 @@
 import { useState } from "react";
 import type { ProfilePayload } from "@/lib/profile";
 import { ProfileCard } from "@/components/ProfileCard";
+import { LockIcon } from "@/components/icons";
 
 type State =
   | { step: "locked" }
@@ -54,7 +55,9 @@ export function FullClient({ slug }: { slug: string }) {
   return (
     <div className="rq-phone-frame">
       <div className="rq-card" style={{ padding: 32, textAlign: "center" }}>
-        <div className="rq-empty-shield" style={{ margin: "0 auto 18px" }} />
+        <div className="rq-empty-shield" style={{ margin: "0 auto 18px" }}>
+          <LockIcon size={22} />
+        </div>
         <h1 style={{ fontSize: 19, margin: "0 0 6px" }}>First responder unlock</h1>
         <p style={{ color: "var(--muted)", fontSize: 14, margin: "0 0 24px", lineHeight: 1.5 }}>
           Enter your department&rsquo;s access code to view the full record. This unlock is

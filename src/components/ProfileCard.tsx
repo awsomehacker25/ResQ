@@ -1,4 +1,5 @@
 import type { ProfilePayload, PublicField } from "@/lib/profile";
+import { ShieldIcon } from "./icons";
 
 const CATEGORY_LABEL: Record<string, string> = {
   medical: "Medical",
@@ -49,7 +50,9 @@ export function ProfileCard({
 
       {isEmpty ? (
         <div className="rq-empty-state">
-          <div className="rq-empty-shield" />
+          <div className="rq-empty-shield">
+            <ShieldIcon size={22} />
+          </div>
           <p className="rq-empty-title">{payload.displayName}</p>
           <p className="rq-empty-copy">
             This person has restricted their information to verified first responders.

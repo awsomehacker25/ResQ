@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import { browserClient, isSupabaseConfigured } from "@/lib/supabase-browser";
 import { Login } from "@/app/dashboard/Login";
+import { ShieldIcon } from "@/components/icons";
 
 type Org = {
   id: string;
@@ -115,10 +116,17 @@ export default function AdminRespondersPage() {
   return (
     <div className="rq-shell">
       <header className="rq-nav">
-        <span className="rq-nav-brand">Responder org review</span>
-        <Link href="/dashboard" className="rq-btn rq-btn-ghost rq-btn-sm">
-          ← Dashboard
-        </Link>
+        <div className="rq-nav-inner">
+          <span className="rq-nav-brand">
+            <span className="rq-nav-mark">
+              <ShieldIcon size={15} />
+            </span>
+            Responder org review
+          </span>
+          <Link href="/dashboard" className="rq-btn rq-btn-ghost rq-btn-sm">
+            ← Dashboard
+          </Link>
+        </div>
       </header>
 
       <div className="rq-container">

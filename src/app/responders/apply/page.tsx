@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { ShieldIcon } from "@/components/icons";
 
 const ORG_TYPES = ["Fire", "EMS", "Police", "Hospital", "Other"];
 
@@ -37,7 +38,9 @@ export default function ApplyPage() {
     <div className="rq-center-card">
       <div className="rq-container-narrow">
         <div className="rq-card" style={{ padding: 36 }}>
-          <div className="rq-empty-shield" style={{ margin: "0 auto 18px" }} />
+          <div className="rq-empty-shield" style={{ margin: "0 auto 18px" }}>
+            <ShieldIcon size={22} />
+          </div>
           <h1 style={{ fontSize: 21, textAlign: "center", margin: "0 0 6px" }}>
             Register your organization
           </h1>
