@@ -24,9 +24,8 @@ export default function Home() {
             <span className="rq-hero-eyebrow">Scan-based emergency ID</span>
             <h1>What a stranger needs to know to save your life.</h1>
             <p>
-              A QR code for your keychain, phone case, or wallet card. Scanning it shows your
-              allergies, conditions, and emergency contacts, tiered by who&rsquo;s looking, fully
-              controlled by you.
+              A QR code for your keychain, phone case, or wallet card, showing your allergies,
+              conditions, and emergency contacts, tiered by who&rsquo;s looking.
             </p>
             <div className="rq-hero-actions">
               <Link href="/dashboard" className="rq-btn rq-btn-primary">
@@ -40,28 +39,16 @@ export default function Home() {
 
           <div className="rq-feature-grid">
             <div className="rq-feature-card">
-              <span className="rq-feature-index">01</span>
               <h3>You choose what&rsquo;s public</h3>
-              <p>
-                Every field and contact has its own tier. Life-saving basics can be visible
-                instantly; anything sensitive stays locked to verified responders.
-              </p>
+              <p>Each field has its own tier. Sensitive details stay locked to responders.</p>
             </div>
             <div className="rq-feature-card">
-              <span className="rq-feature-index">02</span>
               <h3>Family is notified on scan</h3>
-              <p>
-                The moment your code is scanned, the contacts you&rsquo;ve chosen get an SMS with
-                a map link.
-              </p>
+              <p>Your chosen contacts get an SMS with a map link the moment it&rsquo;s scanned.</p>
             </div>
             <div className="rq-feature-card">
-              <span className="rq-feature-index">03</span>
               <h3>Every scan is logged</h3>
-              <p>
-                Timestamp, approximate location, and whether a responder unlocked the full record:
-                visible to you in the dashboard, always.
-              </p>
+              <p>Time, location, and unlock status: visible in your dashboard, always.</p>
             </div>
           </div>
         </div>
